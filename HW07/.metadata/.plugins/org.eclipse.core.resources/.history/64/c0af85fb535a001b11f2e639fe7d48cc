@@ -1,0 +1,13 @@
+package hr.fer.oprpp1.gui;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
+public class RCPositionTest {
+	
+	@Test
+	public void wrongRCPositionDimensions() {
+		assertThrows(CalcLayoutException.class, () -> {return new RCPosition(0,5)});
+	}
+}
