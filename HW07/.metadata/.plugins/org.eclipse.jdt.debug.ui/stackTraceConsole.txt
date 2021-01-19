@@ -1,6 +1,10 @@
-java.lang.NullPointerException: Cannot invoke "java.lang.Double.toString()" because "this.value" is null
-	at hr.fer.oprpp1.gui.calc.CalcModelImpl.insertDigit(CalcModelImpl.java:115)
-	at hr.fer.oprpp1.gui.calc.CalcModelTest.exampleFromHomeworkAssignment(CalcModelTest.java:286)
+org.opentest4j.AssertionFailedError: expected: <152> but was: <124>
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+	at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:510)
+	at hr.fer.oprpp1.gui.CalcLayoutTest.test2(CalcLayoutTest.java:36)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

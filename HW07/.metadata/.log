@@ -2988,3 +2988,36 @@ Binding(CTRL+SHIFT+T,
 
 !ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2021-01-19 09:32:22.724
 !MESSAGE executing callback sts4.classpath.LlkKfjge SUCCESS [done]
+
+!ENTRY org.eclipse.jface 2 0 2021-01-19 13:29:48.704
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2021-01-19 13:29:48.704
+!MESSAGE A conflict occurred for CTRL+D:
+Binding(CTRL+D,
+	ParameterizedCommand(Command(org.eclipse.debug.ui.commands.eof,EOF,
+		Send end of file,
+		Category(org.eclipse.debug.ui.category.run,Run/Debug,Run/Debug command category,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@1a80be8a,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.debug.ui.console,,,system)
+Binding(CTRL+D,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.text.delete.line,Delete Line,
+		Delete a line of text,
+		Category(org.eclipse.ui.category.textEditor,Text Editing,Text Editing Commands,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@4455846f,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.textEditorScope,,,system)
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2021-01-19 13:30:04.989
+!MESSAGE ClasspathListenerHandler removeClasspathListener sts4.classpath.LlkKfjge
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2021-01-19 13:30:04.990
+!MESSAGE unsubscribing from classpath changes: sts4.classpath.LlkKfjge
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2021-01-19 13:30:04.990
+!MESSAGE subsribers = {}
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2021-01-19 13:30:04.990
+!MESSAGE ClasspathListenerHandler removeClasspathListener sts4.classpath.LlkKfjge => OK
