@@ -75,11 +75,12 @@ public class CalcModelImpl implements CalcModel {
 
 	@Override
 	public void clearAll() {
-		this.value = null;
-		this.data = "";
 		this.activeOperand = null;
 		this.pendingOperator = null;
 		this.editable = true;
+		this.value = null;
+		this.data = "";
+		this.negative = false;
 		
 		for (CalcValueListener l : listeners) {
 			l.valueChanged(this);
@@ -194,18 +195,18 @@ public class CalcModelImpl implements CalcModel {
 	public String toString() {
 		if (frozen != null) {
 			return frozen;
-		} else if (value == Double.NEGATIVE_INFINITY) {
-			return "-Infinity";
-		} else if (value == Double.POSITIVE_INFINITY) {
-			return "Infinity";
-		} else if (value == Double.NaN) {
-			return "NAN";
 		} else if (data.equals("") || data.equals("0")) {
 			if (this.negative) {
 				return "-0";
 			} else {
 				return "0";
 			}
+		} else if (value == Double.NEGATIVE_INFINITY) {
+			return "-Infinity";
+		} else if (value == Double.POSITIVE_INFINITY) {
+			return "Infinity";
+		} else if (value == Double.NaN) {
+			return "NAN";
 		} else {
 			return data;
 		}

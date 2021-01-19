@@ -24,7 +24,6 @@ public class Calculator extends JFrame {
 	
 	public Calculator() {
 		model = new CalcModelImpl();
-		setBackground(Color.BLACK);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(500, 350);
 		initGUI();
@@ -40,6 +39,7 @@ public class Calculator extends JFrame {
 		model.addCalcValueListener(display);
 		
 		JCheckBox inv = new JCheckBox("Invert");
+		inv.setBackground(Color.GREEN);
 		cp.add(inv, new RCPosition(5, 7));
 		
 		addButtons(cp);
@@ -64,6 +64,8 @@ public class Calculator extends JFrame {
 					}
 					
 				});
+				
+				inv.addActionListener((ActionListener)comp);
 			} else if (comp instanceof UnaryOperatorButton) {
 				((UnaryOperatorButton) comp).addActionListener(new ActionListener() {
 
@@ -79,6 +81,8 @@ public class Calculator extends JFrame {
 					}
 					
 				});
+				
+				inv.addActionListener((ActionListener)comp);
 			} else if (comp instanceof DigitButton) {
 				((DigitButton) comp).addActionListener(new ActionListener() {
 
@@ -100,6 +104,7 @@ public class Calculator extends JFrame {
 			}
 			
 		});
+		clr.setBackground(Color.GREEN);
 		cp.add(clr, new RCPosition(1, 7));
 		
 		JButton res = new JButton("reset");
@@ -110,6 +115,7 @@ public class Calculator extends JFrame {
 				model.clearAll();
 			}
 		});
+		res.setBackground(Color.GREEN);
 		cp.add(res, new RCPosition(2, 7));
 		
 		JButton push = new JButton("push");
@@ -120,6 +126,7 @@ public class Calculator extends JFrame {
 				model.getStack().push(model.getValue());
 			}
 		});
+		push.setBackground(Color.GREEN);
 		cp.add(push, new RCPosition(3, 7));
 		
 		JButton pop = new JButton("pop");
@@ -130,6 +137,7 @@ public class Calculator extends JFrame {
 				model.setValue(model.getStack().pop());
 			}
 		});
+		pop.setBackground(Color.GREEN);
 		cp.add(pop, new RCPosition(4, 7));
 		
 		JButton point = new JButton(".");
@@ -140,6 +148,7 @@ public class Calculator extends JFrame {
 				model.insertDecimalPoint();
 			}
 		});
+		point.setBackground(Color.GREEN);
 		cp.add(point, new RCPosition(5, 5));
 		
 		JButton swap = new JButton("+/-"); 
@@ -150,6 +159,7 @@ public class Calculator extends JFrame {
 				model.swapSign();
 			}
 		});
+		swap.setBackground(Color.GREEN);
 		cp.add(swap, new RCPosition(5, 4));
 		
 		JButton equ = new JButton("=");
@@ -158,9 +168,9 @@ public class Calculator extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.setValue(model.getPendingBinaryOperation().applyAsDouble(model.getActiveOperand(), model.getValue()));
-				
 			}
 		});
+		equ.setBackground(Color.GREEN);
 		cp.add(equ, new RCPosition(1, 6));
 		
 	}
@@ -175,7 +185,9 @@ public class Calculator extends JFrame {
 		int n = 1;
 		for (int i = 4; i > 1; i--) {
 			for (int j = 3; j <= 5; j++) {
-				cp.add(new DigitButton(n++), new RCPosition(i, j));
+				DigitButton db = new DigitButton(n++);
+				db.setFont(new Font(db.getFont().getName(), Font.BOLD, 20));
+				cp.add(db, new RCPosition(i, j));
 			}
 		}
 		
@@ -185,15 +197,15 @@ public class Calculator extends JFrame {
 		cp.add(new BinaryOperatorButton("*", (a, b) -> {return a * b;}), new RCPosition(3, 6));
 		cp.add(new BinaryOperatorButton("/", (a, b) -> {return a / b;}), new RCPosition(2, 6));
 		
-		cp.add(new BinaryOperatorButton("x^n", (a, b) -> {return Math.pow(a, b);}, (a, b) -> {return Math.pow(a, 1 / b);}), new RCPosition(5, 1));
+		cp.add(new BinaryOperatorButton("x^n", "x^(1/n)",(a, b) -> {return Math.pow(a, b);}, (a, b) -> {return Math.pow(a, 1 / b);}), new RCPosition(5, 1));
 		
-		cp.add(new UnaryOperatorButton("sin", (a) -> {return Math.sin(a);}, (a) -> {return Math.asin(a);}), new RCPosition(2, 2));
-		cp.add(new UnaryOperatorButton("cos", (a) -> {return Math.cos(a);}, (a) -> {return Math.acos(a);}), new RCPosition(3, 2));
-		cp.add(new UnaryOperatorButton("tan", (a) -> {return Math.tan(a);}, (a) -> {return Math.atan(a);}), new RCPosition(4, 2));
-		cp.add(new UnaryOperatorButton("ctg", (a) -> {return 1 / Math.tan(a);}, (a) -> {return 1 / Math.atan(a);}), new RCPosition(5, 2));
-		cp.add(new UnaryOperatorButton("1/x", (a) -> {return 1 / a;}, null), new RCPosition(2, 1));
-		cp.add(new UnaryOperatorButton("log", (a) -> {return Math.log10(a);}, (a) -> {return Math.pow(10, a);}), new RCPosition(3, 1));
-		cp.add(new UnaryOperatorButton("ln", (a) -> {return Math.log(a);}, (a) -> {return Math.pow(Math.E, a);}), new RCPosition(4, 1));
+		cp.add(new UnaryOperatorButton("sin", "arcsin",(a) -> {return Math.sin(a);}, (a) -> {return Math.asin(a);}), new RCPosition(2, 2));
+		cp.add(new UnaryOperatorButton("cos", "arccos",(a) -> {return Math.cos(a);}, (a) -> {return Math.acos(a);}), new RCPosition(3, 2));
+		cp.add(new UnaryOperatorButton("tan", "arctg",(a) -> {return Math.tan(a);}, (a) -> {return Math.atan(a);}), new RCPosition(4, 2));
+		cp.add(new UnaryOperatorButton("ctg", "arcctg",(a) -> {return 1 / Math.tan(a);}, (a) -> {return 1 / Math.atan(a);}), new RCPosition(5, 2));
+		cp.add(new UnaryOperatorButton("1/x",(a) -> {return 1 / a;}), new RCPosition(2, 1));
+		cp.add(new UnaryOperatorButton("log", "10^x",(a) -> {return Math.log10(a);}, (a) -> {return Math.pow(10, a);}), new RCPosition(3, 1));
+		cp.add(new UnaryOperatorButton("ln", "e^x",(a) -> {return Math.log(a);}, (a) -> {return Math.pow(Math.E, a);}), new RCPosition(4, 1));
 		
 	}
 
