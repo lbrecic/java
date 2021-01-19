@@ -1,0 +1,38 @@
+package hr.fer.oprpp1.gui.prim;
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+public class PrimDemo extends JFrame {
+	
+	private PrimListModel model;
+	
+	public PrimDemo() {
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(300, 300);
+		
+		initGUI();
+	}
+	
+	public void initGUI() {
+		model = new PrimListModel();
+		Container cp = getContentPane();
+		cp.setLayout(new BorderLayout());
+		
+		JScrollPane list1 = new JList<>(model);
+		JScrollPane<Integer> list2 = new JList<>(model);
+		
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new PrimDemo().setVisible(true);
+		});
+	}
+}

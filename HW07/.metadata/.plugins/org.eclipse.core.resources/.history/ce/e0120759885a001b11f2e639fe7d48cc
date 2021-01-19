@@ -1,0 +1,23 @@
+package hr.fer.oprpp1.gui.prim;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+public class PrimDemo extends JFrame {
+	
+	private PrimListModel model;
+	
+	public PrimDemo() {
+		model = new PrimListModel();
+	}
+	
+	public void initGUI() {
+		
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new PrimDemo().setVisible(true);
+		});
+	}
+}

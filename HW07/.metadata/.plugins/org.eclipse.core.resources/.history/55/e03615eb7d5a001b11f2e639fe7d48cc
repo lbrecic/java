@@ -1,0 +1,44 @@
+package hr.fer.oprpp1.gui.prim;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
+
+public class PrimListModel implements ListModel<Integer> {
+	
+	private List<ListDataListener> listeners;
+	private Integer prim;
+	private boolean isPrim = false;
+	
+	public PrimListModel() {
+		listeners = new ArrayList<>();
+		prim = 1;
+	}
+	
+	public Integer next() {
+		while ()
+	}
+
+	@Override
+	public int getSize() {
+		return listeners.size();
+	}
+
+	@Override
+	public Object getElementAt(int index) {
+		return listeners.get(index);
+	}
+
+	@Override
+	public void addListDataListener(ListDataListener l) {
+		listeners.add(l);
+	}
+
+	@Override
+	public void removeListDataListener(ListDataListener l) {
+		listeners.remove(l);
+	}
+	
+}

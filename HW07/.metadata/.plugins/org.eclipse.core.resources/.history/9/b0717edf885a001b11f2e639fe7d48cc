@@ -1,0 +1,28 @@
+package hr.fer.oprpp1.gui.prim;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+public class PrimDemo extends JFrame {
+	
+	private PrimListModel model;
+	
+	public PrimDemo() {
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(300, 300);
+		
+		initGUI();
+	}
+	
+	public void initGUI() {
+		model = new PrimListModel();
+		Container cp = getContentPane();
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new PrimDemo().setVisible(true);
+		});
+	}
+}

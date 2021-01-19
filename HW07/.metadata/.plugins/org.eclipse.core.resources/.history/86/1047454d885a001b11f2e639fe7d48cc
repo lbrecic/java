@@ -1,0 +1,20 @@
+package hr.fer.oprpp1.gui.prim;
+
+import javax.swing.SwingUtilities;
+
+public class PrimDemo {
+	
+	public PrimDemo() {
+		
+	}
+	
+	public void initGUI() {
+		
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new PrimDemo().setVisible(true);
+		});
+	}
+}
