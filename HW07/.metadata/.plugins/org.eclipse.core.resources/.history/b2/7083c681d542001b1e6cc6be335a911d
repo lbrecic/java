@@ -1,0 +1,144 @@
+package hr.fer.oprpp1.gui;
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager2;
+import java.util.HashMap;
+import java.util.Map;
+
+public class CalcLayout implements LayoutManager2 {
+
+	private int distance;
+	private Map<Component, RCPosition> constraint;
+
+	public CalcLayout() {
+		this(0);
+	}
+
+	public CalcLayout(int distance) {
+		constraint = new HashMap<>();
+		this.distance = distance;
+	}
+
+	@Override
+	public void addLayoutComponent(String name, Component comp) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void removeLayoutComponent(Component comp) {
+		constraint.remove(comp);
+	}
+
+	@Override
+	public Dimension preferredLayoutSize(Container parent) {
+		Dimension dim = new Dimension(0, 0);
+		
+		
+
+		for (Component comp : parent.getComponents()) {
+			if (constraint.get(comp).getRow() == 1 &&
+					constraint.get(comp).getColumn() == 1) {
+				continue;
+			}
+			
+			if (comp.getMaximumSize().getWidth() >= dim.getWidth()
+					&& comp.getMaximumSize().getHeight() >= dim.getHeight()) {
+				dim = comp.getMaximumSize();
+			}
+		}
+
+		return dim;
+	}
+
+	@Override
+	public Dimension minimumLayoutSize(Container parent) {
+		Dimension dim = new Dimension(0, 0);
+
+		for (Component comp : parent.getComponents()) {
+			if (comp.getMinimumSize().getWidth() >= dim.getWidth()
+					&& comp.getMinimumSize().getHeight() >= dim.getHeight()) {
+				dim = comp.getMinimumSize();
+			}
+		}
+
+		return dim;
+	}
+
+	@Override
+	public void layoutContainer(Container parent) {
+		int width = (int) ((parent.getPreferredSize().getWidth() - parent.getInsets().left - parent.getInsets().right) / 7);
+		int height = (int) ((parent.getPreferredSize().getHeight() - parent.getInsets().top - parent.getInsets().bottom) / 5);
+
+		for (Component comp : parent.getComponents()) {
+			RCPosition rcp = constraint.get(comp);
+
+			if (rcp.getRow() == 1 && rcp.getColumn() == 1) {
+				comp.setBounds(parent.getInsets().left, parent.getInsets().top, 5 * width, height);
+			} else {
+				comp.setBounds(
+					parent.getInsets().left + (rcp.getColumn() - 1) * width + (rcp.getColumn() - 1) * distance,
+					parent.getInsets().top + (rcp.getRow() - 1) * height + (rcp.getRow() - 1) * distance,
+					width,
+					height
+				);
+			}
+		}
+	}
+
+	@Override
+	public void addLayoutComponent(Component comp, Object constraints) {
+		if (comp == null || constraints == null)
+			throw new NullPointerException();
+
+		RCPosition cons;
+		if (constraints instanceof String) {
+			cons = RCPosition.parse((String) constraints);
+		} else if (constraints instanceof RCPosition) {
+			cons = (RCPosition) constraints;
+
+			if (cons.getRow() == 1 && (cons.getColumn() > 1 || cons.getColumn() < 6)) {
+				// throw new IllegalArgumentException();
+			}
+
+			if (constraint.values().contains(cons)) {
+				throw new CalcLayoutException();
+			}
+		} else {
+			throw new IllegalArgumentException();
+		}
+
+		constraint.put(comp, cons);
+	}
+
+	@Override
+	public Dimension maximumLayoutSize(Container target) {
+		Dimension dim = new Dimension(0, 0);
+
+		for (Component comp : target.getComponents()) {
+			if (!(comp.getMaximumSize().getWidth() >= dim.getWidth()
+					&& comp.getMaximumSize().getHeight() >= dim.getHeight())) {
+				dim = comp.getMaximumSize();
+			}
+		}
+
+		return dim;
+	}
+
+	@Override
+	public float getLayoutAlignmentX(Container target) {
+		return 0;
+	}
+
+	@Override
+	public float getLayoutAlignmentY(Container target) {
+		return 0;
+	}
+
+	@Override
+	public void invalidateLayout(Container target) {
+
+	}
+	
+}

@@ -1,0 +1,72 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class LinkedListIndexedCollection extends Collection{
+	private static class ListNode {
+		private ListNode previous;
+		private ListNode next;
+		private Object value;
+	}
+	
+	private int size;
+	private ListNode first;
+	private ListNode last;
+	
+	public LinkedListIndexedCollection() {
+		first = last = null;
+		this.size = 0;
+	}
+	
+	public LinkedListIndexedCollection(Collection collection) {
+		this.addAll(collection);
+		this.size = collection.size();
+	}
+	
+	public void add(Object value) {
+		if (value.equals(null)) throw new NullPointerException();
+		ListNode  item = new ListNode();
+		this.last.next = item;
+		item.previous = this.last;
+		item.next = null;
+		this.last = item;
+		this.size++;
+	}
+	
+	public Object get(int index) {
+		if (index < 0 || index > this.size() - 1) throw new IndexOutOfBoundsException();
+		ListNode iterator;
+		if (index < this.size() / 2) {
+			iterator = this.first;
+		} else {
+			index = this.size() - index - 1;
+			iterator = this.last;
+		}
+		while (index > 0) {
+			iterator = iterator.next;
+			index--;
+		}
+		return iterator.value;
+	}
+	
+	public void clear() {
+		this.first = this.last = null;
+		this.size = 0;
+	}
+	
+	public void insert(Object value, int position) {
+		if (position < 0 || position > this.size()) throw new IndexOutOfBoundsException();
+		if (value.equals(null)) throw new NullPointerException();
+		ListNode iterator = this.first;
+		while (index > 0) {
+			iterator = iterator.next;
+			index--;
+		}
+	}
+	
+	public int indexOf(Object value) {
+		
+	}
+	
+	public void remove(int index) {
+		
+	}
+}

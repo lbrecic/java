@@ -1,0 +1,94 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class Collection {
+	protected Collection() {}
+	
+	/**
+	 * Metoda provjerava je li kolekcija prazna.
+	 * 
+	 * @return <code>true</code> ako je kolekcija prazna, <code>false</code> inače.
+	 */
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+	
+	/**
+	 * Metoda dohvaća trenutni broj objekata koji se nalaze u kolekciji.
+	 * 
+	 * @return broj objekata u kolekciji.
+	 */
+	public int size() {
+		return 0;
+	}
+	
+	/**
+	 * Metoda dodaje objekte u kolekciju.
+	 * 
+	 * @param value objekt koji dodajemo u kolekciju.
+	 */
+	public void add(Object value);
+	
+	/**
+	 * Metoda provjerava sadrži li kolekcija zadani objekt koristeći metodu <code>equals</code>.
+	 * 
+	 * @param value objekt čiju egzistenciju unutar kolekcije provjeravamo.
+	 * @return <code>true</code> ako se objekt nalazi u kolekciji, <code>false</code> inače.
+	 */
+	public boolean contains(Object value) {
+		return false;
+	}
+	
+	/**
+	 * Metoda provjerava sadrži li kolekcija zadani objekt koristeći metodu <code>equals</code>
+	 * te uklanja jedno pojavljivanje objekta (u ovom razredu nije određeno koje pojavljivanje).
+	 * 
+	 * @param value objekt koji uklanjamo ukoliko se nalazi u kolekciji.
+	 * @return <code>true</code> ako uspješno uklonimo objekt, <code>false</code> inače.
+	 */
+	public boolean remove(Object value) {
+		return false;	
+	}
+	
+	/**
+	 * Metoda alocira niz veličine kolekcije, napuni se sadržajom kolekcije te vraća novonsatali niz.
+	 * Metoda ne moževratiti <code>null</code>.
+	 * 
+	 * @return kolekciju kao niz.
+	 * @throws UnsupportedOperationException
+	 */
+	public Object[] toArray() {
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Metoda poziva <code>Processor.process(.)</code> za svaki element kolekcije.
+	 * Redoslijed kojim će elementi biti poslani nije definiran.
+	 * 
+	 * @param processor tip procesora koji obavlja zadaću nad elementima.
+	 */
+	public void forEach(Processor processor) {}
+	
+	/**
+	 * Metoda dodaje elemente zadane kolekcije u trenutnu kolekciju. Pritom zadana kolekcija ostaje nepromijenjena.
+	 * Lokalnim razredom definiramo procesor koji dodaje elemente u trenut kolekciju metodom <code>add</code>.
+	 * Dodavanje je obavljeno metodom <code>forEach</code> nad zadanom kolekcijom s instancom lokalnog razreda kao aregumentom.
+	 * 
+	 * @param other kolekcija čije elemente dodajemo u trenutnu kolekciju.
+	 */
+	public void addAll(Collection other) {
+		class AddAllProcessor extends Processor {
+			public void process(Object value) {
+				add(value);
+			}
+		}
+		
+		AddAllProcessor processor = new AddAllProcessor();
+		
+		other.forEach(processor);
+	}
+	
+	/**
+	 * Metoda uklanja sve elemente iz kolekcije.
+	 */
+	public void clear() {}
+}

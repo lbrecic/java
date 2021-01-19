@@ -1,0 +1,12 @@
+INDEX VERSION 1.131+/home/luka/Workspaces/eclipse-workspace/HW/HW02/.metadata/.plugins/org.eclipse.jdt.core
+2174948116.index
+822034800.index
+561014140.index
+1444694200.index
+494821776.index
+1200946036.index
+1743569578.index
+3875259225.index
+2977458106.index
+1902981762.index
+2880986674.index

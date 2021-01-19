@@ -1,0 +1,10 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class ExampleOfUsage {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

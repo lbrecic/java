@@ -1,0 +1,25 @@
+package hr.fer.oprpp1.gui;
+
+public class RCPosition {
+	
+	private int row, column;
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+	
+	public RCPosition(int row, int column) {
+		this.row = row;
+		this.column = column;
+	}
+
+	public static RCPosition parse(String text) {
+		
+		
+		return new RCPosition();
+	}
+}

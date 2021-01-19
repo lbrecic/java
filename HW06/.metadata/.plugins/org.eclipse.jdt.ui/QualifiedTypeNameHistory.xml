@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.math.Complex"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.math.ComplexRootedPolynomial"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.math.ComplexPolynomial"/>
+</qualifiedTypeNameHistroy>

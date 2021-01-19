@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.ElementsGetter"/>
+    <fullyQualifiedTypeName name="org.junit.jupiter.api.Assertions"/>
+    <fullyQualifiedTypeName name="org.junit.jupiter.api.Test"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.math.Vector2D"/>
+    <fullyQualifiedTypeName name="sun.java2d.pipe.SpanShapeRenderer.Simple"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.SimpleHashtable"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.ConcurentModificationException"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.SimpleHashtable.TableEntry"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.ConcurrentModificationException"/>
+    <fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
+    <fullyQualifiedTypeName name="java.util.Iterator"/>
+</qualifiedTypeNameHistroy>

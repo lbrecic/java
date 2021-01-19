@@ -1,0 +1,53 @@
+package hr.fer.oprpp1.custom.collections.demo;
+
+import hr.fer.oprpp1.custom.collections.ObjectStack;
+
+public class StackDemo {
+
+	public static void main(String[] args) {
+		String[] argArray = args[0].split("\\s");
+		ObjectStack stack = new ObjectStack();
+		boolean isNumber = true;
+		int number = 0;
+		String operator;
+
+		for (String arg : argArray) {
+			try {
+				number = Integer.parseInt(arg);
+				isNumber = true;
+			} catch (NumberFormatException e) {
+				isNumber = false;
+			}
+
+			if (isNumber) {
+				stack.push(number);
+			} else {
+				Integer secondOperand = (Integer) stack.pop();
+				Integer firstOperand = (Integer) stack.pop();
+				operator = arg;
+
+				if (operator.equals("+"))
+					stack.push(firstOperand + secondOperand);
+
+				if (operator.equals("-"))
+					stack.push(firstOperand - secondOperand);
+
+				if (operator.equals("/"))
+					stack.push(firstOperand / secondOperand);
+
+				if (operator.equals("*"))
+					stack.push(firstOperand / secondOperand);
+
+				if (operator.equals("%"))
+					stack.push(firstOperand / secondOperand);
+			}
+
+		}
+		
+		if(stack.size() != 1) {
+			throw new IllegalStateException();
+		}
+		
+		System.out.println("Expression evaluates to " + stack.pop());
+	}
+}

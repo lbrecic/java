@@ -1,0 +1,18 @@
+package hr.fer.oprpp1.gui.calc;
+
+import javax.swing.JButton;
+
+public class DigitButton extends JButton {
+	
+	private int op;
+
+	public DigitButton(String op) {
+		super(op);
+		this.op = Integer.parseInt(op);
+	}
+
+	public int getOp() {
+		return op;
+	}
+	
+}

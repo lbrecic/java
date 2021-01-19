@@ -1,0 +1,101 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class ArrayIndexedCollection extends Collection {
+	private int size;
+	private Object[] elements;
+	
+	public ArrayIndexedCollection(int initialCapacity) {
+		if (initialCapacity < 1) throw new IllegalArgumentException();
+		this.size = 0;
+		this.elements = new Object[initialCapacity];
+	}
+	
+	public ArrayIndexedCollection() {
+		this(16);
+	}
+	
+	public ArrayIndexedCollection(Collection collection, int initialCapacity) {
+		if (collection == null) throw new NullPointerException();
+		size = collection.size();
+		this.elements = new Object[collection.size() > initialCapacity ? collection.size() : initialCapacity];
+		this.elements = collection.toArray();
+	}
+	
+	public ArrayIndexedCollection(Collection collection) {
+		this(collection, 0);
+	}
+	
+	public void add(Object value) {
+		if (value == null) throw new NullPointerException();
+		if (this.size() == this.elements.length) {
+			ArrayIndexedCollection tmp = new ArrayIndexedCollection(this.size()*2);
+			for (int i = 0; i < this.size(); i++) {
+				tmp.elements[i] = this.elements[i];
+			}
+			this.elements = tmp.elements;			
+		}
+		this.elements[this.size++] = value;
+	}
+	
+	public Object get(int index) {
+		if (index < 0 || index > this.size() - 1) 
+			throw new IndexOutOfBoundsException();
+		return this.elements[index];
+	}
+	
+	public void clear() {
+		this.size = 0;
+		for (int i = 0; i < this.size(); i++) {
+			this.elements[i] = null;
+		}
+	}
+	
+	public void insert(Object value, int position) {
+		
+	}
+	
+	public int indexOf(Object value) {
+		if (!(value.equals(null))) {
+			for (int i = 0; i < this.elements.length; i++) {
+				if 
+			}
+		}
+		return -1;
+	}
+	
+	public void remove(int index) {
+		
+	}
+		
+	public boolean isEmpty() {
+		return this.size() == 0;
+	}
+	
+	public int size() {
+		return this.size;
+	}
+	
+	public boolean contains(Object value) {
+		return false;
+	}
+
+	public Object[] toArray() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public void forEach(Processor processor) {
+		for (int i = 0; i < this.size(); i++) {
+			processor.process(this.elements[i]);
+		}
+	}
+	
+	public void addAll(Collection other) {
+		class AddAllProcessor extends Processor {
+			public void process(Object value) {
+				add(value);
+			}
+		}
+		
+		other.forEach(new AddAllProcessor());
+	}
+}

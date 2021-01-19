@@ -1,0 +1,20 @@
+package hr.fer.oprpp1.gui.calc;
+
+import java.util.function.DoubleUnaryOperator;
+
+import javax.swing.JButton;
+
+public class UnaryOperator extends JButton {
+	
+	private DoubleUnaryOperator op;
+	
+	public UnaryOperator(DoubleUnaryOperator op) {
+		super(op.toString());
+		this.op = op;
+	}
+
+	public DoubleUnaryOperator getOp() {
+		return op;
+	}
+	
+}

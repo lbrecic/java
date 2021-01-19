@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;hr.fer.oprpp1.hw05.util.TestUtil&apos; to &apos;UtilTest&apos;&#x0A;- Original project: &apos;hw05-0036515775&apos;&#x0A;- Original element: &apos;hr.fer.oprpp1.hw05.util.TestUtil&apos;&#x0A;- Renamed element: &apos;hr.fer.oprpp1.hw05.util.UtilTest&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;TestUtil&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/test\/java=/test=/true=/=/optional=/true=/=/maven.pomderived=/true=/&lt;hr.fer.oprpp1.hw05.util{TestUtil.java[TestUtil" matchStrategy="1" name="UtilTest" qualified="false" references="true" similarDeclarations="false" stamp="1607189285639" textual="false" version="1.0"/>
+</session>

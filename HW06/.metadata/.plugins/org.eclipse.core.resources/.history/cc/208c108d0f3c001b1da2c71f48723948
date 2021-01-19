@@ -1,0 +1,10 @@
+package hr.fer.oprpp1.math;
+
+public class ComplexPolynomial {
+	
+	// constructor
+	public ComplexPolynomial(Complex... factors) {
+		
+	}
+	
+	// returns order of this polynom; eg. For (7+2i)z^3+2z^2+5z+1 returns 3

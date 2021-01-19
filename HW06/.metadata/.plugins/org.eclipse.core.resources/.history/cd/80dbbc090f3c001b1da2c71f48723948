@@ -1,0 +1,10 @@
+package hr.fer.oprpp1.math;
+
+public class ComplexRootedPolynomial {
+	
+	// constructor
+	public ComplexRootedPolynomial(Complex constant, Complex... roots) {
+		
+	}
+	
+}

@@ -1,0 +1,21 @@
+package hr.fer.oprpp1.gui.calc;
+
+import java.awt.Color;
+
+import javax.swing.JButton;
+
+public class DigitButton extends JButton {
+	
+	private int op;
+
+	public DigitButton(String op) {
+		super(op);
+		this.op = Integer.parseInt(op);
+		setBackground(Color.GREEN);
+	}
+
+	public int getOp() {
+		return op;
+	}
+	
+}

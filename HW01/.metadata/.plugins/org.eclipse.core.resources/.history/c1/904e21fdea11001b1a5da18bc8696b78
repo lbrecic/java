@@ -1,0 +1,50 @@
+package hr.fer.oprpp1.hw01;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+public class ComplexNumberTest {
+	@Test
+	public void testDefaultConstructorReal() {
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		assertEquals(0.0, num.getReal());
+	}
+	
+	@Test
+	public void testDefaultConstructorImaginary() {
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		assertEquals(0.0, num.getImaginary());
+	}
+	
+	@Test
+	public void testGetNumFromReal() {
+		ComplexNumber num = ComplexNumber.fromReal(2.0);
+		assertEquals(2.0, num.getReal());
+	}
+	
+	@Test
+	public void testGetNumFromImaginary() {
+		ComplexNumber num = ComplexNumber.fromImaginary(2.0);
+		assertEquals(0.0, num.getImaginary());
+	}
+	
+	@Test
+	public void testGetNumFromMagnitudeAndInvalidAngleThrow() {
+		assertThrows(IndexOutOfBoundsException.class, () -> ComplexNumber.fromMagnitudeAndAngle(2.0, 7.0));
+	}
+	
+	@Test
+	public void testGetNumFromMagnitudeAndAngle() {
+		ComplexNumber num = ComplexNumber.fromMagnitudeAndAngle(1.0, Math.PI);
+		assertEquals(-1.0, num.getReal());
+	}
+	
+	@Test
+	public void testParseInvalidArgumentThrow() {
+		assertThrows(IllegalArgumentException.class, () -> ComplexNumber.parse("++8-3i"));
+	}
+	
+	@Test
+	public void
+}

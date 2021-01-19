@@ -1,0 +1,30 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class ArrayIndexedCollection extends Collection {
+	private int size;
+	private Object[] elements;
+	
+	public ArrayIndexedCollection() {
+		this.size = 16;
+		this.elements = new Object[size];
+	}
+	
+	public ArrayIndexedCollection(int initialCapacity) {
+		if (initialCapacity < 1) throw new IllegalArgumentException();
+		this.size = initialCapacity;
+		this.elements = new Object[size];
+	}
+
+	public ArrayIndexedCollection(Collection collection) {
+		if (collection == null) throw new NullPointerException();
+		this.size = collection.size();
+		this.elements = new Object[size];
+	}
+
+	public ArrayIndexedCollection(Collection collection, int initialCapacity) {
+		if (collection == null) throw new NullPointerException();
+		size = collection.size() > initialCapacity ? collection.size() : initialCapacity;
+		this.size = collection.size();
+		this.elements = new Object[size];
+	}
+}

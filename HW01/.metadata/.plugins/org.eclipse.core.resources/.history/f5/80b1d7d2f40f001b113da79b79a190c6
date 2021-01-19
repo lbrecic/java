@@ -1,0 +1,64 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class LinkedListIndexedCollection extends Collection{
+	private static class ListNode {
+		private ListNode previous;
+		private ListNode next;
+		private Object value;
+	}
+	
+	private int size;
+	private ListNode first;
+	private ListNode last;
+	
+	public LinkedListIndexedCollection() {
+		first = last = null;
+	}
+	
+	public LinkedListIndexedCollection(Collection collection) {
+		this.addAll(collection);
+	}
+	
+	public void add(Object value) {
+		if (value.equals(null)) throw new NullPointerException();
+		ListNode  item = new ListNode();
+		this.last.next = item;
+		item.previous = this.last;
+		item.next = null;
+		this.last = item;
+		this.size++;
+	}
+	
+	public Object get(int index) {
+		if (index < 0 || index > this.size()) throw new IndexOutOfBoundsException();
+		ListNode iterator;
+		if (index < this.size() / 2) {
+			iterator = this.first;
+			index -= 1;
+		} else {
+			index = this.size() - index;
+			iterator = this.last;
+		}
+		while (index > 0) {
+			iterator = iterator.next;
+			index--;
+		}
+		return iterator.value;
+	}
+	
+	public void clear() {
+		
+	}
+	
+	public void insert(Object value, int position) {
+		
+	}
+	
+	public int indexOf(Object value) {
+		
+	}
+	
+	public void remove(int index) {
+		
+	}
+}

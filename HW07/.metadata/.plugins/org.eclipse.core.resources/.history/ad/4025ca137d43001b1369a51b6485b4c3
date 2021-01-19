@@ -1,0 +1,26 @@
+package hr.fer.oprpp1.gui.calc;
+
+import java.awt.Color;
+
+import javax.swing.JLabel;
+
+import hr.fer.oprpp1.gui.calc.model.CalcModel;
+import hr.fer.oprpp1.gui.calc.model.CalcValueListener;
+
+public class Display extends JLabel implements CalcValueListener {
+	
+	private String text;
+
+	public Display(String text) {
+		super(text);
+		this.text = text;
+		setOpague(true);
+		setBackground(Color.YELLOW);
+	}
+	
+	@Override
+	public void valueChanged(CalcModel model) {
+		repaint();
+	}
+
+}

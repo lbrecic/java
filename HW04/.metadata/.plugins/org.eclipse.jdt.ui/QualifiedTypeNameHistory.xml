@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="hr.fer.zemris.lsystems.Painter"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.ObjectStack"/>
+    <fullyQualifiedTypeName name="hr.fer.zemris.lsystems.LSystemBuilder"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.Command"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.TurtleState"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.custom.collections.Dictionary"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.math.Vector2D"/>
+    <fullyQualifiedTypeName name="java.awt.Color"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.DrawCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.RotateCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.SkipCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.ScaleCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.PushCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.PopCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.commands.ColorCommand"/>
+    <fullyQualifiedTypeName name="hr.fer.zemris.lsystems.LSystem"/>
+    <fullyQualifiedTypeName name="hr.fer.zemris.lsystems.LSystemBuilderProvider"/>
+    <fullyQualifiedTypeName name="hr.fer.zemris.lsystems.gui.LSystemViewer"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.lsystems.impl.LSystemBuilderImpl"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="org.junit.jupiter.api.Test"/>
+    <fullyQualifiedTypeName name="org.junit.jupiter.api.Assertions"/>
+    <fullyQualifiedTypeName name="java.nio.file.Files"/>
+    <fullyQualifiedTypeName name="java.nio.file.Paths"/>
+    <fullyQualifiedTypeName name="java.nio.charset.StandardCharsets"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.StudentDatabase"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.FieldValueGetters.FirstNameGetter"/>
+    <fullyQualifiedTypeName name="sun.nio.ch.LinuxAsynchronousChannelProvider"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.FieldValueGetters.LastNameGetter"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.FieldValueGetters.JMBAGGetter"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.QueryParser"/>
+    <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.IComparisonOperator"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.IFieldValueGetter"/>
+    <fullyQualifiedTypeName name="hr.fer.oprpp1.hw04.db.ConditionalExpression"/>
+</qualifiedTypeNameHistroy>

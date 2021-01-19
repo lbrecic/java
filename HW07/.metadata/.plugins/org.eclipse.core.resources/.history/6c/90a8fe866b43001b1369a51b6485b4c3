@@ -1,0 +1,159 @@
+package hr.fer.oprpp1.gui.calc;
+
+import java.util.function.DoubleBinaryOperator;
+
+import hr.fer.oprpp1.gui.calc.model.CalcModel;
+import hr.fer.oprpp1.gui.calc.model.CalcValueListener;
+import hr.fer.oprpp1.gui.calc.model.CalculatorInputException;
+
+public class CalcModelImpl implements CalcModel {
+	
+	private boolean editable = true;
+	private boolean negative = false;
+	private String data = "";
+	private Double value = null;
+	private String frozen = null;
+	private Double activeOperand = null;
+	private DoubleBinaryOperator pendingOperator = null;
+
+	@Override
+	public void addCalcValueListener(CalcValueListener l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeCalcValueListener(CalcValueListener l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getValue() {
+		return this.value;
+	}
+
+	@Override
+	public void setValue(double value) {
+		if (value < 0.0) this.negative = true;
+		this.value = value;
+		this.data = Double.toString(value);
+		this.editable = false;
+	}
+
+	@Override
+	public boolean isEditable() {
+		return this.editable;
+	}
+
+	@Override
+	public void clear() {
+		this.value = null;
+		this.data = "";
+	}
+
+	@Override
+	public void clearAll() {
+		this.value = null;
+		this.data = "";
+		this.activeOperand = null;
+		this.pendingOperator = null;
+	}
+
+	@Override
+	public void swapSign() throws CalculatorInputException {
+		if (!editable) throw new CalculatorInputException();
+		
+		frozen = null;
+		negative = !negative;
+	}
+
+	@Override
+	public void insertDecimalPoint() throws CalculatorInputException {
+		if (!editable) throw new CalculatorInputException();
+		
+		if (data.contains(".")) throw new CalculatorInputException();
+		
+		data += ".";
+		value = Double.parseDouble(data);
+		frozen = null;
+	}
+
+	@Override
+	public void insertDigit(int digit) throws CalculatorInputException, IllegalArgumentException {
+		if (!editable) throw new CalculatorInputException();
+		
+		try {
+			Double.parseDouble(data + Integer.toString(digit));
+		} catch (Exception e) {
+			throw new CalculatorInputException();
+		}
+		
+		data = data + Integer.toString(digit);
+		value = Double.parseDouble(data);
+		frozen = null;
+	}
+
+	@Override
+	public boolean isActiveOperandSet() {
+		return activeOperand != null;
+	}
+
+	@Override
+	public double getActiveOperand() throws IllegalStateException {
+		if (!isActiveOperandSet()) throw new IllegalStateException();
+		
+		return this.activeOperand;
+	}
+
+	@Override
+	public void setActiveOperand(double activeOperand) {
+		this.activeOperand = activeOperand;
+	}
+
+	@Override
+	public void clearActiveOperand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public DoubleBinaryOperator getPendingBinaryOperation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPendingBinaryOperation(DoubleBinaryOperator op) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String toString() {
+		if (frozen != null) {
+			return frozen;
+		} else if (data.equals("")) {
+			if (this.negative) {
+				return "-0";
+			} else {
+				return "0";
+			}
+		} else {
+			if (this.negative) {
+				return "-" + data;
+			} else {
+				return data;
+			}
+		}
+	}
+	
+	public void freezeValue(String value) {
+		this.frozen = value;
+	}
+	
+	public boolean hasFrozenValue() {
+		return frozen != null;
+	}
+
+}

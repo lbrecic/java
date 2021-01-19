@@ -1,0 +1,158 @@
+package hr.fer.oprpp1.hw01;
+
+public class ComplexNumber {
+	double real, imaginary;
+	
+	public ComplexNumber(double real, double imaginary) {
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+	
+	public static ComplexNumber fromReal(double real) {
+		ComplexNumber num = new ComplexNumber(real, 0.0);
+		return num;
+	}
+	
+	public static ComplexNumber fromImaginary(double imaginary) {
+		ComplexNumber num = new ComplexNumber(0.0, imaginary);
+		return num;
+	}
+	
+	public static ComplexNumber fromMagnitudeAndAngle(double magnitude, double angle) {
+		if (angle < 0 || angle > 2*Math.PI) throw new IndexOutOfBoundsException();
+		ComplexNumber num = new ComplexNumber(magnitude*Math.cos(angle), magnitude*Math.sin(angle));
+		return num;
+	}
+	
+	public static ComplexNumber parse(String s) {
+		char[] c = s.toCharArray();
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		String n = "";
+		boolean b = false;
+		
+		for (int i = 0; i < c.length; i++) {
+			if (c[i] == '+' || c[i] == '-') { 
+				if (b) throw new IllegalArgumentException();
+				else {
+					if (!n.equals("")) {
+						num.real = Double.parseDouble(n);
+					}
+					
+					n = Character.toString(c[i]);
+				}
+			} else if (c[i] == 'i') { 
+				 if (n.equals("")) {
+					 num.imaginary = 1.0;
+				 } else if (n.equals("-")) {
+					 num.imaginary = -1.0;
+				 } else {
+					 num.imaginary = Double.parseDouble(n);
+				 }
+				 
+				 if (i == c.length -1) {
+					 break;
+				 } else {
+					 throw new IllegalArgumentException();
+				 }
+			} else {
+				n = n + Character.toString(c[i]);
+				if (b) b = false;
+			}
+		}
+		
+		return num;
+	}
+	
+	public double getReal() {
+		return this.real;
+	}
+	
+	public double getimaginary() {
+		return this.imaginary;
+	}
+	
+	public double getMagnitude() {
+		return Math.abs(Math.sqrt(real*real + imaginary*imaginary));
+	}
+	
+	public double getAngle() {
+		double tmp = Math.atan(imaginary/real);
+		return tmp > 0 ? tmp : (2*Math.PI - tmp);
+	}
+	
+	public ComplexNumber add(ComplexNumber c) {
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		num.real = this.real + c.real;
+		num.imaginary = this.imaginary + c.imaginary;
+		return num;
+	}
+	
+	public ComplexNumber sub(ComplexNumber c) {
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		num.real = this.real - c.real;
+		num.imaginary = this.imaginary - c.imaginary;
+		return num;
+	}
+	
+	public ComplexNumber mul(ComplexNumber c) {
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		num.real = this.real*c.real - this.imaginary*c.imaginary;
+		num.imaginary = this.real*c.imaginary + this.imaginary*c.real;
+		return num;
+	}
+	
+	public ComplexNumber div(ComplexNumber c) {
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		num.real = (this.real*c.real + this.imaginary*c.imaginary)/(c.real*c.real + c.imaginary*c.imaginary);
+		num.imaginary = (this.imaginary*c.real - this.real*c.imaginary)/(c.real*c.real + c.imaginary*c.imaginary);
+		return num;
+	}
+	
+	public ComplexNumber power(int n) {
+		double th = this.getAngle();
+		double mag = Math.pow(this.getMagnitude(), n);
+		
+		ComplexNumber num = new ComplexNumber(0.0, 0.0);
+		
+		num.real = Math.cos(n*th);
+		num.imaginary = Math.sin(n*th);
+		
+		return num;
+	}
+	
+	public ComplexNumber[] root(int n) {
+		ComplexNumber[] roots = new ComplexNumber[n];
+		
+		double mag = Math.pow(this.getMagnitude(), 1/n);
+		double ang = this.getAngle();
+		
+		for (int i = 0; i < n; i++) {
+			ComplexNumber num = new ComplexNumber(0.0, 0.0);
+			
+			num.real = mag*Math.cos((ang + 2*i*Math.PI));
+			num.imaginary = mag*Math.sin((ang + 2*i*Math.PI));
+			
+			roots[i] = num;
+		}
+		
+		return roots;
+	}
+	
+	public String toString() {
+		String s = new String();
+		if (this.real != 0.0) {
+			s = Double.toString(this.real);
+		}
+		
+		if (this.imaginary != 0.0) {
+			if (this.imaginary != 1.0 && this.imaginary != -1.0) {
+				s = s + Double.toString(this.imaginary);
+			} else if (this.imaginary == -1.0) {
+				s = s + "-";
+			}
+			s = s + "i";
+		}
+		
+		return s;
+	}
+}

@@ -1,0 +1,22 @@
+package hr.fer.oprpp1.gui.calc;
+
+import java.awt.Color;
+import java.util.function.DoubleUnaryOperator;
+
+import javax.swing.JButton;
+
+public class UnaryOperatorButton extends JButton {
+	
+	private DoubleUnaryOperator op;
+	
+	public UnaryOperatorButton(String op, Function f) {
+		super(op);
+		this.f = f;
+		setBackground(Color.GREEN);
+	}
+
+	public Function getFunction() {
+		return f;
+	}
+	
+}

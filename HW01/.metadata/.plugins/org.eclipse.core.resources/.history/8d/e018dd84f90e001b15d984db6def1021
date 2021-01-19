@@ -1,0 +1,11 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class Collection {
+	protected Collection() {};
+	
+	public boolean isEmpty();
+	
+	public int size();
+	
+	public void add(Object value);
+}

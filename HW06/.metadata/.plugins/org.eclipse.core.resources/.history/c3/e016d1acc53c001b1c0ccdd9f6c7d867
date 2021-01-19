@@ -1,0 +1,70 @@
+package hr.fer.oprpp1.math;
+
+public class ComplexRootedPolynomial {
+	Complex constant;
+	Complex[] roots;
+	
+	// constructor
+	public ComplexRootedPolynomial(Complex constant, Complex... roots) {
+		this.constant = constant;
+		this.roots = new Complex[roots.length];
+		
+		for (int i = 0; i < roots.length; i++) {
+			this.roots[i] = roots[i];
+		}
+	}
+	
+	// computes polynomial value at given point z
+	public Complex apply(Complex z) {
+		Complex app = this.constant;
+		
+		for (int i = 0; i < this.roots.length; i++) {
+			app = app.multiply((z.sub(this.roots[i])));
+		}
+		
+		return app;
+	}
+	
+	// converts this representation to ComplexPolynomial type
+	public ComplexPolynomial toComplexPolynom() {
+		Complex[] c = new Complex[1];
+		c[0] = this.constant;
+		ComplexPolynomial cp = new ComplexPolynomial(c);
+		
+		for (int i = 1; i < this.roots.length; i++) {
+			Complex[] cmp = new Complex[2];
+			cmp[0] = Complex.ONE;
+			cmp[1] = this.roots[i].negate();
+			
+			cp = cp.multiply(new ComplexPolynomial(cmp));
+		}
+		
+		
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("(" + this.constant.toString() + ")");
+		
+		for (int i = 0; i < this.roots.length; i++) {
+			sb.append("(z-(" + this.roots[i].toString() + "))");
+		}
+		
+		return sb.toString();
+	}
+	
+	// finds index of closest root for given complex number z that is whitin
+	// treshold; if there is no such root, returns -1
+	// first root has index 0, second index 1, etc
+	public int indexOfClosestRootFor(Complex z, double treshold) {
+		for (int i = 0; i < this.roots.length; i++) {
+			if ((z.sub(this.roots[i])).module() < treshold) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+}

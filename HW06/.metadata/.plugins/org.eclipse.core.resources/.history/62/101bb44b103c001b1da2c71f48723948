@@ -1,0 +1,12 @@
+package hr.fer.oprpp1.math.demo;
+
+import hr.fer.oprpp1.math.Complex;
+
+public class ComplexDemo {
+	
+	public static void main(String[] args) {
+		ComplexRootedPolynomial crp = new ComplexRootedPolynomial(
+				new Complex(2,0), Complex.ONE, Complex.ONE_NEG, Complex.IM, Complex.IM_NEG
+		);
+	}
+}

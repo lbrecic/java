@@ -1,0 +1,62 @@
+package hr.fer.oprpp1.custom.collections;
+
+public class Collection {
+	protected Collection() {}
+	
+	/**
+	 * Metoda provjerava je li kolekcija prazna.
+	 * 
+	 * @return <code>true</code> ako je kolekcija prazna, <code>false</code> inače.
+	 */
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+	
+	/**
+	 * Metoda dohvaća trenutni broj objekata koji se nalaze u kolekciji.
+	 * 
+	 * @return broj objekata u kolekciji.
+	 */
+	public int size() {
+		return 0;
+	}
+	
+	/**
+	 * Metoda dodaje objekte u kolekciju.
+	 * 
+	 * @param value objekt koji dodajemo u kolekciju.
+	 */
+	public void add(Object value);
+	
+	/**
+	 * Metoda provjerava sadrži li kolekcija zadani objekt koristeći metodu <code>equals</code>.
+	 * 
+	 * @param value objekt čiju egzistenciju unutar kolekcije provjeravamo.
+	 * @return <code>true</code> ako se objekt nalazi u kolekciji, <code>false</code> inače.
+	 */
+	public boolean contains(Object value) {
+		return false;
+	}
+	
+	/**
+	 * Metoda provjerava sadrži li kolekcija zadani objekt koristeći metodu <code>equals</code>
+	 * te uklanja jedno pojavljivanje objekta (u ovom razredu nije određeno koje pojavljivanje).
+	 * 
+	 * @param value objekt koji uklanjamo ukoliko se nalazi u kolekciji.
+	 * @return <code>true</code> ako uspješno uklonimo objekt, <code>false</code> inače.
+	 */
+	public boolean remove(Object value) {
+		return false;	
+	}
+	
+	
+	public Object[] toArray() {
+		
+	}
+	
+	public void forEach(Processor processor);
+	
+	public void addAll(Collection other);
+	
+	public void clear();
+}
