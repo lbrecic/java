@@ -1,0 +1,25 @@
+package hr.fer.oprpp1.gui.charts;
+
+import java.util.List;
+
+public class BarCharts {
+	
+	private List<XYValue> list;
+	private String xDesc, yDesc;
+	private int yMin, yMax, yInterval;
+	
+	public BarCharts(List<XYValue> list, String xDesc, String yDesc, int yMin, int yMax, int yInterval) {
+		this.list = list;
+		this.xDesc = xDesc;
+		this.yDesc = yDesc;
+		this.yMin = yMin;
+		if (yMax <= yMin) throw new IllegalArgumentException();
+		this.yMax = yMax;
+		
+		while ((yMax - yMin) % yInterval != 0) {
+			yInterval++;
+		}
+		
+		this.yInterval = yInterval;
+	}
+}

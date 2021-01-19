@@ -1,0 +1,10 @@
+package hr.fer.oprpp1.gui.charts;
+
+import java.util.List;
+
+public class BarCharts {
+	
+	public BarCharts(List<XYValue> list) {
+		
+	}
+}

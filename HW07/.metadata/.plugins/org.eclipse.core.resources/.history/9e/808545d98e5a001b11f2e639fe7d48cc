@@ -1,0 +1,11 @@
+package hr.fer.oprpp1.gui.charts;
+
+import javax.swing.JComponent;
+
+public class BarChartComponent extends JComponent {
+	
+	
+	public BarChartComponent(BarChart chart) {
+		
+	}
+}

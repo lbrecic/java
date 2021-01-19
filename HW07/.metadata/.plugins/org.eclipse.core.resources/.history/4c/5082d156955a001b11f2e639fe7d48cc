@@ -1,0 +1,23 @@
+package hr.fer.oprpp1.gui.charts;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+public class BarChartDemo extends JFrame {
+	
+	public BarChartDemo(String filePath) {
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		initGUI();
+	}
+	
+	public void initGUI() {
+		
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new BarChartDemo(args[0]).setVisible(true);
+		});
+	}
+}
