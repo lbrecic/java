@@ -70,7 +70,6 @@ public class CalcModelImpl implements CalcModel {
 	public void clear() {
 		this.value = null;
 		this.data = "";
-		this.editable = true;
 	}
 
 	@Override
@@ -79,7 +78,6 @@ public class CalcModelImpl implements CalcModel {
 		this.data = "";
 		this.activeOperand = null;
 		this.pendingOperator = null;
-		this.editable = true;
 		
 		for (CalcValueListener l : listeners) {
 			l.valueChanged(this);

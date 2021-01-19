@@ -55,10 +55,6 @@ public class CalcModelImpl implements CalcModel {
 		this.value = value;
 		this.data = Double.toString(value);
 		this.editable = false;
-		
-		for (CalcValueListener l : listeners) {
-			l.valueChanged(this);
-		}
 	}
 
 	@Override
@@ -70,7 +66,6 @@ public class CalcModelImpl implements CalcModel {
 	public void clear() {
 		this.value = null;
 		this.data = "";
-		this.editable = true;
 	}
 
 	@Override
@@ -79,11 +74,6 @@ public class CalcModelImpl implements CalcModel {
 		this.data = "";
 		this.activeOperand = null;
 		this.pendingOperator = null;
-		this.editable = true;
-		
-		for (CalcValueListener l : listeners) {
-			l.valueChanged(this);
-		}
 	}
 
 	@Override
@@ -105,10 +95,6 @@ public class CalcModelImpl implements CalcModel {
 			value = Double.parseDouble(data);
 
 		negative = !negative;
-		
-		for (CalcValueListener l : listeners) {
-			l.valueChanged(this);
-		}
 	}
 
 	@Override
@@ -122,10 +108,6 @@ public class CalcModelImpl implements CalcModel {
 		data += ".";
 		value = Double.parseDouble(data);
 		frozen = null;
-		
-		for (CalcValueListener l : listeners) {
-			l.valueChanged(this);
-		}
 	}
 
 	@Override
@@ -151,10 +133,6 @@ public class CalcModelImpl implements CalcModel {
 		data = data + Integer.toString(digit);
 		value = Double.parseDouble(data);
 		frozen = null;
-		
-		for (CalcValueListener l : listeners) {
-			l.valueChanged(this);
-		}
 	}
 
 	@Override

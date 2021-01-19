@@ -20,7 +20,7 @@ public class Display extends JLabel implements CalcValueListener {
 	
 	@Override
 	public void valueChanged(CalcModel model) {
-		this.setText(model.toString());;
+		repaint();
 	}
 
 }

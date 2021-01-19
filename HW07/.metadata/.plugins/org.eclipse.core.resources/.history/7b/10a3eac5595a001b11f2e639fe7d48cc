@@ -51,7 +51,7 @@ public class Calculator extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if (model.isActiveOperandSet()) {
-							model.setValue(model.getPendingBinaryOperation().applyAsDouble(model.getActiveOperand(), model.getValue()));//?
+							model.getPendingBinaryOperation().applyAsDouble(model.getActiveOperand(), model.getValue());
 						}
 						
 						model.setActiveOperand(model.getValue());
@@ -69,13 +69,11 @@ public class Calculator extends JFrame {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						model.setActiveOperand(model.getValue());
 						if (!inv.isSelected()) {
-							model.setValue(((UnaryOperatorButton) comp).getOp().applyAsDouble(model.getActiveOperand()));
+							((UnaryOperatorButton) comp).getOp().applyAsDouble(model.getActiveOperand());
 						} else {
-							model.setValue(((UnaryOperatorButton) comp).getInv().applyAsDouble(model.getActiveOperand()));
+							((UnaryOperatorButton) comp).getInv().applyAsDouble(model.getActiveOperand());
 						}
-						model.clear();
 					}
 					
 				});
@@ -157,8 +155,7 @@ public class Calculator extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.setValue(model.getPendingBinaryOperation().applyAsDouble(model.getActiveOperand(), model.getValue()));
-				
+				model.getPendingBinaryOperation().applyAsDouble(model.getActiveOperand(), model.getValue());
 			}
 		});
 		cp.add(equ, new RCPosition(1, 6));

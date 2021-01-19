@@ -158,7 +158,6 @@ public class Calculator extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.setValue(model.getPendingBinaryOperation().applyAsDouble(model.getActiveOperand(), model.getValue()));
-				
 			}
 		});
 		cp.add(equ, new RCPosition(1, 6));
