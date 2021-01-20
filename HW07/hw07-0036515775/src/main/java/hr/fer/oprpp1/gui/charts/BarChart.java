@@ -18,7 +18,7 @@ public class BarChart {
 		this.yMax = yMax;
 		
 		while ((yMax - yMin) % yInterval != 0) {
-			yInterval++;
+			yInterval--;
 		}
 		this.yInterval = yInterval;
 		
