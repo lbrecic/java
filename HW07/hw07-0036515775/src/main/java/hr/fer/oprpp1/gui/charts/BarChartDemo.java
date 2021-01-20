@@ -1,5 +1,7 @@
 package hr.fer.oprpp1.gui.charts;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -22,14 +25,18 @@ public class BarChartDemo extends JFrame {
 	public BarChartDemo(String filePath) throws IOException {
 		this.filePath = filePath;
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(500, 530);
+		setLocation(300, 300);
 		initGUI();
 	}
 	
 	public void initGUI() throws IOException {
 		Container cp = getContentPane();
+		cp.setLayout(new BorderLayout());
 		JLabel label = new JLabel(filePath);
 		label.setHorizontalTextPosition(JLabel.CENTER);
-		cp.add(label);
+		label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		cp.add(label, BorderLayout.PAGE_START);
 		
 		Path file = Paths.get(filePath);
 		Scanner sc = new Scanner(file);

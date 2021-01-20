@@ -1,10 +1,8 @@
-org.opentest4j.AssertionFailedError: expected: <152> but was: <124>
-	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
-	at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
-	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
-	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:510)
-	at hr.fer.oprpp1.gui.CalcLayoutTest.test2(CalcLayoutTest.java:36)
+org.opentest4j.AssertionFailedError: Expected hr.fer.oprpp1.gui.CalcLayoutException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:71)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:37)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3007)
+	at hr.fer.oprpp1.gui.RCPositionTest.wrongRCPositionDimensions4(RCPositionTest.java:33)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

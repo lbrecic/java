@@ -26,4 +26,54 @@ public class BarChart {
 			if (v.getY() < this.yMin) throw new IllegalStateException();
 		}
 	}
+
+	public List<XYValue> getList() {
+		return list;
+	}
+
+	public void setList(List<XYValue> list) {
+		this.list = list;
+	}
+
+	public String getxDesc() {
+		return xDesc;
+	}
+
+	public void setxDesc(String xDesc) {
+		this.xDesc = xDesc;
+	}
+
+	public String getyDesc() {
+		return yDesc;
+	}
+
+	public void setyDesc(String yDesc) {
+		this.yDesc = yDesc;
+	}
+
+	public int getyMin() {
+		return yMin;
+	}
+
+	public void setyMin(int yMin) {
+		this.yMin = yMin;
+	}
+
+	public int getyMax() {
+		return yMax;
+	}
+
+	public void setyMax(int yMax) {
+		this.yMax = yMax;
+	}
+
+	public int getyInterval() {
+		return yInterval;
+	}
+
+	public void setyInterval(int yInterval) {
+		this.yInterval = yInterval;
+	}
+	
+	
 }
