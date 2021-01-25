@@ -62,7 +62,7 @@ public class BarChartComponent extends JComponent {
 		
 		double n = (chart.getyMax() - chart.getyMin()) / chart.getyInterval();
 		for (double i = chart.getyMin(), j = getHeight() - margin - fixed; i <= chart.getyMax(); i += chart.getyInterval(), j -= (getHeight() - 2*(margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2)/n) {
-			g2.drawString(Integer.toString((int) i), margin + fixed - g2.getFontMetrics().stringWidth(Integer.toString((int) i)) - 10, (int) j + g2.getFontMetrics().getHeight() / 3);
+			g2.drawString(Integer.toString((int) i), margin + fixed - g2.getFontMetrics().stringWidth(Integer.toString((int) i)) - 10, (int) j + g2.getFontMetrics().getHeight() / 2);
 			g2.drawLine(margin + fixed, (int) j, margin + fixed - 5, (int) j);
 		}
 		
