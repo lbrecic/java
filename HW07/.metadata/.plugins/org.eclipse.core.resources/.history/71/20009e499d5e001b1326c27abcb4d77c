@@ -73,9 +73,9 @@ public class BarChartComponent extends JComponent {
 			g2.drawLine(i, getHeight() - margin - fixed, i, getHeight() - margin - fixed + 5);
 			
 			g2.setColor(Color.blue);
-			int h = (chart.getyMax() - chart.getList().get(j).getY()) / chart.getyInterval();
-			double height = getHeight() - 2 * (margin + fixed) - h * ((double) (getHeight() - 2 * (margin + fixed)) / n);
-			g2.fillRect(i + 2, (int) (getHeight() - margin - fixed - height), el - 2, (int) height);
+			int h = chart.getList().get(j).getY() / chart.getyInterval();
+			int height = getHeight() - margin - fixed - h * ((getHeight() - 2 * (margin + fixed)) / n);
+			g2.fillRect(i + 2, getHeight() - margin - fixed, el - 2, height);
 		}
 		
 	}
