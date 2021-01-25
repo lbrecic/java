@@ -1,8 +1,0 @@
-package hr.fer.oprpp1.math.demo;
-
-public class ComplexDemo {
-	
-	public static void main(String[] args) {
-		
-	}
-}

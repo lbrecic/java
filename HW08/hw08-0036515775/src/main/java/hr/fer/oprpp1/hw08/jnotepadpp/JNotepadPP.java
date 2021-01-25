@@ -17,8 +17,8 @@ public class JNotepadPP extends JFrame {
 	private MultipleDocumentModel model;
 
 	public JNotepadPP() {
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		//setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		//setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		setTitle("JNotepad++");
 		setSize(300, 300);
@@ -31,6 +31,7 @@ public class JNotepadPP extends JFrame {
 		Container cp = getContentPane();
 		model = new DefaultMultipleDocumentModel();
 		cp.add((JTabbedPane) model);
+		
 	}
 	
 	public static void main(String[] args) {

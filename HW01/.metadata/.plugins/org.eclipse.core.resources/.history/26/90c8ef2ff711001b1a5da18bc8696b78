@@ -1,7 +1,0 @@
-/**
- * Paket sadrži sve razrede koji se koriste u domaćim zadaćama
- * na predmetu <i>Odabrana poglavlja razvoja programske potpore 1</i>.
- * 
- * @since 1.0
- */
-package hr.fer.oprpp1.custom.collections;

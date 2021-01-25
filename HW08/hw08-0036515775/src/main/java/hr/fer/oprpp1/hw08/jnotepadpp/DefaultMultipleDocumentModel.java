@@ -42,7 +42,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		
 		current = new DefaultSingleDocumentModel(path, "");
 		documents.add(current);
-		addTab(current.getFilePath().getFileName().toString(), icon, current.getTextComponent(), tip);
+		//addTab(current.getFilePath().getFileName().toString(), icon, current.getTextComponent(), tip);
 		
 		return current;
 	}

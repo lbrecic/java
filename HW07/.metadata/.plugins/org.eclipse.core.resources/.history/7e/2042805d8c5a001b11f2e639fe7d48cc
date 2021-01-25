@@ -1,8 +1,0 @@
-package hr.fer.oprpp1.gui.charts;
-
-public class BarCharts {
-	
-	public BarCharts(List<XYValue> list) {
-		
-	}
-}
