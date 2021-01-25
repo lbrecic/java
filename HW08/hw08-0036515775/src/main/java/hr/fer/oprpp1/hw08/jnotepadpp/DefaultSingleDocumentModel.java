@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class DefaultSingleDocumentModel implements SingleDocumentModel {
 	
@@ -17,25 +19,28 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel {
 		this.filePath = filePath;
 		
 		textArea = new JTextArea();
+		textArea.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				setModified(true);
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				setModified(true);
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				setModified(true);
+			}
+		});
 		textArea.setText(textContent);
 		
 		modified = false;
 		
 		listeners = new ArrayList<>();
-		
-		addSingleDocumentListener(new SingleDocumentListener() {
-			
-			@Override
-			public void documentModifyStatusUpdated(SingleDocumentModel model) {
-				
-			}
-			
-			@Override
-			public void documentFilePathUpdated(SingleDocumentModel model) {
-				
-			}
-		});
-		
 	}
 
 	public JTextArea getTextComponent() {
@@ -56,6 +61,9 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel {
 
 	public void setModified(boolean modified) {
 		this.modified = modified;
+		for (SingleDocumentListener l : listeners) {
+			l.documentModifyStatusUpdated(this);
+		}
 	}
 
 	public void addSingleDocumentListener(SingleDocumentListener l) {
