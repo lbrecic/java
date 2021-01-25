@@ -60,26 +60,23 @@ public class BarChartComponent extends JComponent {
 
 		g2.fillPolygon(xPoints, yPoints, 3);
 		
-		double n = (chart.getyMax() - chart.getyMin()) / chart.getyInterval();
-		for (double i = chart.getyMin(), j = getHeight() - margin - fixed; i <= chart.getyMax(); i += chart.getyInterval(), j -= (getHeight() - 2*(margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2)/n) {
-			g2.drawString(Integer.toString((int) i), margin + fixed - g2.getFontMetrics().stringWidth(Integer.toString((int) i)) - 10, (int) j);
-			g2.drawLine(margin + fixed, (int) j, margin + fixed - 5, (int) j);
+		int n = (chart.getyMax() - chart.getyMin()) / chart.getyInterval();
+		for (int i = chart.getyMin(), j = getHeight() - margin - fixed; i <= chart.getyMax(); i += chart.getyInterval(), j -= (getHeight() - 2*(margin + fixed))/n) {
+			g2.drawString(Integer.toString(i), margin + fixed - g2.getFontMetrics().stringWidth(Integer.toString(i)) - 10, j);
+			g2.drawLine(margin + fixed, j, margin + fixed - 5, j);
 		}
 		
-		double el = (getWidth() - 2*(margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2) / chart.getList().size();
-		int j = 0;
-		for (double i = margin + fixed; j < chart.getList().size(); i += el, j++) {
+		int el = (getWidth() - 2*(margin + fixed)) / chart.getList().size();
+		for (int i = margin + fixed, j = 0; j < chart.getList().size(); i += el, j++) {
 			g2.setColor(Color.black);
-			g2.drawString(Integer.toString(chart.getList().get(j).getX()), (int) (i + el/2), getHeight() - margin - fixed + g2.getFontMetrics().getHeight());
-			g2.drawLine((int) i, getHeight() - margin - fixed, (int) i, getHeight() - margin - fixed + 5);
+			g2.drawString(Integer.toString(chart.getList().get(j).getX()), i + el/2, getHeight() - margin - fixed + g2.getFontMetrics().getHeight());
+			g2.drawLine(i, getHeight() - margin - fixed, i, getHeight() - margin - fixed + 5);
 			
-			g2.setColor(Color.orange);
+			g2.setColor(Color.blue);
 			int h = (chart.getyMax() - chart.getList().get(j).getY()) / chart.getyInterval();
-			double height = getHeight() - 2 * (margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2 -  h * ((double) (getHeight() - 2 * (margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2) / n);
-			g2.fillRect((int) i + 2, (int) (getHeight() - margin - fixed - height), (int) el - 2, (int) height);
+			double height = getHeight() - 2 * (margin + fixed) - h * ((double) (getHeight() - 2 * (margin + fixed)) / n);
+			g2.fillRect(i + 2, (int) (getHeight() - margin - fixed - height), el - 2, (int) height);
 		}
-		g2.setColor(Color.black);
-		g2.drawLine((int) (margin + fixed + el * chart.getList().size()), getHeight() - margin - fixed, (int) (margin + fixed + el * chart.getList().size()), getHeight() - margin - fixed + 5);
 		
 	}
 

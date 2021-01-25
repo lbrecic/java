@@ -70,16 +70,14 @@ public class BarChartComponent extends JComponent {
 		int j = 0;
 		for (double i = margin + fixed; j < chart.getList().size(); i += el, j++) {
 			g2.setColor(Color.black);
-			g2.drawString(Integer.toString(chart.getList().get(j).getX()), (int) (i + el/2), getHeight() - margin - fixed + g2.getFontMetrics().getHeight());
-			g2.drawLine((int) i, getHeight() - margin - fixed, (int) i, getHeight() - margin - fixed + 5);
+			g2.drawString(Integer.toString(chart.getList().get(j).getX()), i + el/2, getHeight() - margin - fixed + g2.getFontMetrics().getHeight());
+			g2.drawLine(i, getHeight() - margin - fixed, i, getHeight() - margin - fixed + 5);
 			
-			g2.setColor(Color.orange);
+			g2.setColor(Color.blue);
 			int h = (chart.getyMax() - chart.getList().get(j).getY()) / chart.getyInterval();
 			double height = getHeight() - 2 * (margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2 -  h * ((double) (getHeight() - 2 * (margin + fixed) - Math.round(arrLen / 2 * Math.sqrt(3)) - 2) / n);
-			g2.fillRect((int) i + 2, (int) (getHeight() - margin - fixed - height), (int) el - 2, (int) height);
+			g2.fillRect(i + 2, (int) (getHeight() - margin - fixed - height), el - 2, (int) height);
 		}
-		g2.setColor(Color.black);
-		g2.drawLine((int) (margin + fixed + el * chart.getList().size()), getHeight() - margin - fixed, (int) (margin + fixed + el * chart.getList().size()), getHeight() - margin - fixed + 5);
 		
 	}
 
