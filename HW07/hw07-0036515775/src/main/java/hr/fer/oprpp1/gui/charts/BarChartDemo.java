@@ -34,7 +34,7 @@ public class BarChartDemo extends JFrame {
 		Container cp = getContentPane();
 		cp.setLayout(new BorderLayout());
 		JLabel label = new JLabel(filePath);
-		label.setHorizontalTextPosition(JLabel.CENTER);
+		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		cp.add(label, BorderLayout.PAGE_START);
 		
