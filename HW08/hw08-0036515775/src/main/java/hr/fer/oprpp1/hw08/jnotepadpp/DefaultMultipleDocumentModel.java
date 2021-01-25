@@ -2,29 +2,49 @@ package hr.fer.oprpp1.hw08.jnotepadpp;
 
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JTabbedPane;
 
 public class DefaultMultipleDocumentModel extends JTabbedPane implements MultipleDocumentModel {
 
-	public Iterator<SingleDocumentModel> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private List<SingleDocumentModel> documents;
+	private SingleDocumentModel current;
+	private List<MultipleDocumentListener> listeners;
+	
+	public DefaultMultipleDocumentModel() {
+		
 	}
 
 	public SingleDocumentModel createNewDocument() {
-		// TODO Auto-generated method stub
-		return null;
+		SingleDocumentModel newDocument = new DefaultSingleDocumentModel(null, "");
+		documents.add(newDocument);
+		
+		return newDocument;
 	}
 
 	public SingleDocumentModel getCurrentDocument() {
-		// TODO Auto-generated method stub
-		return null;
+		return current;
 	}
 
 	public SingleDocumentModel loadDocument(Path path) {
-		// TODO Auto-generated method stub
-		return null;
+		for (SingleDocumentModel model : documents) {
+			if (model.getFilePath().equals(path)) {
+				current = model;
+				return current;
+			}
+		}
+		
+		current = new DefaultSingleDocumentModel(path, "");
+		documents.add(current);
+		addTab(current.getFilePath().getFileName().toString(), icon, current.getTextComponent(), tip);
+		
+		return current;
 	}
 
 	public void saveDocument(SingleDocumentModel model, Path newPath) {
@@ -33,28 +53,50 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	}
 
 	public void closeDocument(SingleDocumentModel model) {
-		// TODO Auto-generated method stub
+		if (model.isModified()) {
+			
+		} else {
+			documents.remove(model);
+		}
 		
 	}
 
 	public void addMultipleDocumentListener(MultipleDocumentListener l) {
-		// TODO Auto-generated method stub
-		
+		listeners.add(l);
 	}
 
 	public void removeMultipleDocumentListener(MultipleDocumentListener l) {
-		// TODO Auto-generated method stub
-		
+		listeners.remove(l);
 	}
 
 	public int getNumberOfDocuments() {
-		// TODO Auto-generated method stub
-		return 0;
+		return documents.size();
 	}
 
 	public SingleDocumentModel getDocument(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return documents.get(index);
+	}
+
+	@Override
+	public Iterator<SingleDocumentModel> iterator() {
+		return new Iterator<SingleDocumentModel>() {
+			
+			int i = 0;
+
+			@Override
+			public boolean hasNext() {
+				if (i >= documents.size()) {
+					return false;
+				} 
+				return true;
+			}
+
+			@Override
+			public SingleDocumentModel next() {
+				return documents.get(i++);
+			}
+			
+		};
 	}
 
 }

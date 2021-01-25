@@ -1,0 +1,31 @@
+package hr.fer.oprpp1.hw08.jnotepadpp;
+
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+public class JNotepadPP extends JFrame {
+	
+	public JNotepadPP() {
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		//setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		setTitle("JNotepad++");
+		setSize(300, 300);
+		setLocation(300, 300);
+		
+		initGUI();
+	}
+	
+	public void initGUI() {
+		
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new JNotepadPP();
+		});
+	}
+	
+}

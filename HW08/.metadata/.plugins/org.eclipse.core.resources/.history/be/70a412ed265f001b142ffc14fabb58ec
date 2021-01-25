@@ -1,0 +1,24 @@
+package hr.fer.oprpp1.hw08.jnotepadpp;
+
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+
+public class JNotepadPP extends JFrame {
+	
+	public JNotepadPP() {
+		
+		
+		initGUI();
+	}
+	
+	public void initGUI() {
+		
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			new JNotepadPP();
+		});
+	}
+	
+}

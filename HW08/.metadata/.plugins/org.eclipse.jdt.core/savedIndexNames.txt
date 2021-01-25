@@ -9,4 +9,3 @@ INDEX VERSION 1.131+/home/luka/Workspaces/eclipse-workspace/OPRPP1/HW/HW08/.meta
 561014140.index
 2977458106.index
 1743569578.index
-1902981762.index

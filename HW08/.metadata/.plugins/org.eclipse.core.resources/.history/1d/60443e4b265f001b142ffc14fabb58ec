@@ -1,0 +1,17 @@
+package hr.fer.oprpp1.hw08.jnotepadpp;
+
+public class JNotepadPP {
+	
+	public JNotepadPP() {
+		
+	}
+	
+	public void initGUI() {
+		
+	}
+	
+	public static void main(String[] args) {
+		
+	}
+	
+}
