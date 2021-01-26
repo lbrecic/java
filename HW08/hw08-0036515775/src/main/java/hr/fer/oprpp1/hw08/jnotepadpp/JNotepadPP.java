@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.awt.BorderLayout;
 
@@ -26,8 +27,9 @@ public class JNotepadPP extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private DefaultMultipleDocumentModel model;
+	private MultipleDocumentListener mdl;
 
-	public JNotepadPP() {
+	public JNotepadPP() throws IOException {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		addWindowListener(new WindowAdapter() {
@@ -71,7 +73,7 @@ public class JNotepadPP extends JFrame {
 		initGUI();
 	}
 
-	public void initGUI() {
+	public void initGUI() throws IOException {
 		Container cp = getContentPane();
 
 		JMenuBar bar = new JMenuBar();
@@ -91,7 +93,7 @@ public class JNotepadPP extends JFrame {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				model.setCurrent(model.getDocuments().get(model.getSelectedIndex()));
-				
+
 				if (model.getCurrent().getFilePath() == null) {
 					setTitle("unnamed");
 				} else {
@@ -100,13 +102,36 @@ public class JNotepadPP extends JFrame {
 			}
 
 		});
+		mdl = new MultipleDocumentListener() {
+
+			@Override
+			public void currentDocumentChanged(SingleDocumentModel previousModel, SingleDocumentModel currentModel) {
+				if (currentModel.getFilePath() == null) {
+					setTitle("unnamed");
+				} else {
+					setTitle(currentModel.getFilePath().getFileName().toString());
+				}
+			}
+
+			@Override
+			public void documentAdded(SingleDocumentModel model) {}
+
+			@Override
+			public void documentRemoved(SingleDocumentModel model) {}
+			
+		};
+		model.addMultipleDocumentListener(mdl);
 		cp.add((JTabbedPane) model, BorderLayout.CENTER);
 
 	}
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
-			new JNotepadPP().setVisible(true);
+			try {
+				new JNotepadPP().setVisible(true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			;
 		});
 	}
@@ -148,9 +173,19 @@ public class JNotepadPP extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.saveDocument(model.getCurrentDocument(), model.getCurrentDocument().getFilePath());
+				if (model.getCurrentDocument().getFilePath() == null) {
+					JFileChooser chooser = new JFileChooser();
+
+					int returnVal = chooser.showOpenDialog(getParent());
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						model.saveDocument(model.getCurrentDocument(), Paths.get(chooser.getSelectedFile().getPath()));
+					}
+				} else {
+					model.saveDocument(model.getCurrentDocument(), model.getCurrentDocument().getFilePath());
+				}
+
 			}
-		});
+		}); 
 
 		menu.add(btn);
 

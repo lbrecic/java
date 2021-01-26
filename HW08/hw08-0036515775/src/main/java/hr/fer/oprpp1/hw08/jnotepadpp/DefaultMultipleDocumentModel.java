@@ -1,11 +1,17 @@
 package hr.fer.oprpp1.hw08.jnotepadpp;
 
-import java.net.http.WebSocket.Listener;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -18,23 +24,34 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	private SingleDocumentModel current;
 	private List<MultipleDocumentListener> listeners;
 	private SingleDocumentListener sdl;
+	private ImageIcon unmodified;
+	private ImageIcon modified;
 	
-	public DefaultMultipleDocumentModel() {
+	public DefaultMultipleDocumentModel() throws IOException {
 		documents = new ArrayList<>();
 		listeners = new ArrayList<>();
 		
-		// img
+		unmodified = getIcons("unmodified.png");
+		modified = getIcons("modified.png");
 		
 		sdl = new SingleDocumentListener() {
 
 			@Override
 			public void documentModifyStatusUpdated(SingleDocumentModel model) {
-				// promjena tab ikone
+				if (model.isModified()) {
+					setIconAt(getSelectedIndex(), modified);
+				} else {
+					setIconAt(getSelectedIndex(), unmodified);
+				}
 			}
 
 			@Override
 			public void documentFilePathUpdated(SingleDocumentModel model) {
-				// promjena naziva prozora
+				if (getCurrentDocument().getFilePath() == null) {
+					getCurrentDocument().setFilePath(model.getFilePath());
+				} else {
+					setTitleAt(getSelectedIndex(), getCurrentDocument().getFilePath().getFileName().toString()); 
+				}
 			}
 			
 		};
@@ -44,8 +61,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		SingleDocumentModel newDocument = new DefaultSingleDocumentModel(null, "");
 		newDocument.addSingleDocumentListener(sdl);
 		documents.add(newDocument);
-		current = newDocument;
-		add("unnamed", new JScrollPane(newDocument.getTextComponent()));
+		setCurrent(newDocument);
+		addTab("unnamed", unmodified, new JScrollPane(newDocument.getTextComponent()));
 		
 		return newDocument;
 	}
@@ -57,22 +74,44 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	public SingleDocumentModel loadDocument(Path path) {
 		for (SingleDocumentModel model : documents) {
 			if (model.getFilePath().equals(path)) {
-				current = model;
+				setCurrent(model);;
 				return current;
 			}
 		}
 		
+		String text = "";
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile())));
+			
+			String buff = br.readLine();
+			while (buff != null) {
+				text += buff;
+				buff = br.readLine();
+			}
+			
+			br.close();	
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		current = new DefaultSingleDocumentModel(path, );
+		setCurrent(new DefaultSingleDocumentModel(path, text));
 		
 		documents.add(current);
-		//addTab(current.getFilePath().getFileName().toString(), icon, new JScrollPane(current.getTextComponent()), tip);
+		addTab(current.getFilePath().getFileName().toString(), unmodified, new JScrollPane(current.getTextComponent()));
 		
 		return current;
 	}
 
 	public void saveDocument(SingleDocumentModel model, Path newPath) {
+		String text = model.getTextComponent().getText();
 		
+		try {
+			Files.write(newPath, text.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		model.setFilePath(newPath);
 		model.setModified(false);
 	}
 
@@ -137,6 +176,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	}
 
 	public void setCurrent(SingleDocumentModel current) {
+		
 		this.current = current;
 	}
 
@@ -148,6 +188,12 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		this.listeners = listeners;
 	}
 	
-	
+	public ImageIcon getIcons(String iconName) throws IOException {
+		InputStream is = this.getClass().getResourceAsStream("./icons/" + iconName);
+		if (is == null) throw new IOException();
+		byte[] bytes = is.readAllBytes();
+		is.close();
+		return new ImageIcon(bytes);
+	}
 
 }

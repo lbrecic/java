@@ -9,37 +9,37 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class DefaultSingleDocumentModel implements SingleDocumentModel {
-	
+
 	private JTextArea textArea;
 	private Path filePath;
 	private boolean modified;
 	private List<SingleDocumentListener> listeners;
-	
+
 	public DefaultSingleDocumentModel(Path filePath, String textContent) {
 		this.filePath = filePath;
-		
+
 		textArea = new JTextArea();
 		textArea.getDocument().addDocumentListener(new DocumentListener() {
-			
+
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				setModified(true);
 			}
-			
+
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				setModified(true);
 			}
-			
+
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				setModified(true);
 			}
 		});
 		textArea.setText(textContent);
-		
+
 		modified = false;
-		
+
 		listeners = new ArrayList<>();
 	}
 
@@ -53,6 +53,9 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel {
 
 	public void setFilePath(Path path) {
 		this.filePath = path;
+		for (SingleDocumentListener l : listeners) {
+			l.documentFilePathUpdated(this);
+		}
 	}
 
 	public boolean isModified() {
@@ -61,8 +64,10 @@ public class DefaultSingleDocumentModel implements SingleDocumentModel {
 
 	public void setModified(boolean modified) {
 		this.modified = modified;
-		for (SingleDocumentListener l : listeners) {
-			l.documentModifyStatusUpdated(this);
+		if (listeners != null) {
+			for (SingleDocumentListener l : listeners) {
+				l.documentModifyStatusUpdated(this);
+			}
 		}
 	}
 
