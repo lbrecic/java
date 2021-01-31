@@ -73,7 +73,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 
 	public SingleDocumentModel loadDocument(Path path) {
 		for (SingleDocumentModel model : documents) {
-			if (model.getFilePath().equals(path)) {
+			if (model.getFilePath() != null && model.getFilePath().equals(path)) {
 				setCurrent(model);;
 				return current;
 			}
@@ -117,7 +117,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 
 	public void closeDocument(SingleDocumentModel model) {
 		if (model.isModified()) {
-			JOptionPane.showOptionDialog(getParent(), "Document is not modified! Do you still want to close it?", 
+			JOptionPane.showOptionDialog(getParent(), "Document is modified! Do you still want to close it?", 
 				"Document unsaved!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, 
 				null, null, JOptionPane.NO_OPTION);
 		} else {

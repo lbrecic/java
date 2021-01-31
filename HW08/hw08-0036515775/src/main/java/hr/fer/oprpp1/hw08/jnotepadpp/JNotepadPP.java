@@ -1,6 +1,12 @@
 package hr.fer.oprpp1.hw08.jnotepadpp;
 
 import java.awt.Container;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -28,8 +34,11 @@ public class JNotepadPP extends JFrame {
 
 	private DefaultMultipleDocumentModel model;
 	private MultipleDocumentListener mdl;
+	private Clipboard clpbrd;
 
 	public JNotepadPP() throws IOException {
+		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+		
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		addWindowListener(new WindowAdapter() {
@@ -114,11 +123,13 @@ public class JNotepadPP extends JFrame {
 			}
 
 			@Override
-			public void documentAdded(SingleDocumentModel model) {}
+			public void documentAdded(SingleDocumentModel model) {
+			}
 
 			@Override
-			public void documentRemoved(SingleDocumentModel model) {}
-			
+			public void documentRemoved(SingleDocumentModel model) {
+			}
+
 		};
 		model.addMultipleDocumentListener(mdl);
 		cp.add((JTabbedPane) model, BorderLayout.CENTER);
@@ -185,7 +196,7 @@ public class JNotepadPP extends JFrame {
 				}
 
 			}
-		}); 
+		});
 
 		menu.add(btn);
 
@@ -206,10 +217,82 @@ public class JNotepadPP extends JFrame {
 
 		menu.add(btn);
 
+		btn = new JButton();
+		btn.setText("Close");
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (model.getCurrentDocument() != null) {
+					if (model.getDocuments().size() > 1) {
+						int index = (model.getSelectedIndex() - 1) > -1 ? model.getSelectedIndex() - 1 : model.getSelectedIndex() + 1;
+						model.setCurrent(model.getDocuments().get(index));
+					} else {
+						model.setCurrent(null);
+					}
+					model.removeTabAt(model.getSelectedIndex());
+					model.closeDocument(model.getCurrentDocument());
+				}
+			}
+		});
+
+		menu.add(btn);
+
 	}
 
 	public void addToolButtons(JToolBar tool) {
+		
+		JButton btn = new JButton();
+		btn.setText("Cut");
+		btn.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StringSelection selected = new StringSelection(model.getCurrentDocument().getTextComponent().getSelectedText());
+				clpbrd.setContents(selected, null);
+				model.getCurrentDocument().getTextComponent().setText(
+						model.getCurrentDocument().getTextComponent().getText().replace(
+						model.getCurrentDocument().getTextComponent().getSelectedText(), ""));
+			}
+	
+		});
+		
+		tool.add(btn);
+		
+		btn = new JButton();
+		btn.setText("Copy");
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StringSelection selected = new StringSelection(model.getCurrentDocument().getTextComponent().getSelectedText());
+				clpbrd.setContents(selected, null);
+			}
+	
+		});
+		
+		tool.add(btn);
+		
+		btn = new JButton();
+		btn.setText("Paste");
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Transferable t = clpbrd.getContents(this);
+				if (t != null) {
+					try {
+						model.getCurrentDocument().getTextComponent().insert((String) t.getTransferData(DataFlavor.stringFlavor), 
+								model.getCurrentDocument().getTextComponent().getCaretPosition());
+					} catch (UnsupportedFlavorException | IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+	
+		});
+		
+		tool.add(btn);
 	}
 
 }
