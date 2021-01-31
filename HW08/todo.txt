@@ -1,0 +1,5 @@
+1) close document ne valja najbolje
+2) sad se opet ne refreshaju ikonice nakon promjene texta
+3) statistika datoteke
+4) spremanje na istoj lokaciji pod istim imenom - izbacuje li warning?
+5) problem 2, prije toga jos jednom provjeriti je li sve ostalo stima
