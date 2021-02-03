@@ -1,6 +1,7 @@
 package hr.fer.oprpp1.hw08.jnotepadpp;
 
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -15,17 +16,22 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.awt.BorderLayout;
+import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
@@ -81,7 +87,8 @@ public class JNotepadPP extends JFrame {
 
 		setTitle("JNotepad++");
 		setSize(700, 700);
-		setLocation(300, 300);
+//		setLocation(300, 300);
+		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 
 		initGUI();
@@ -89,6 +96,9 @@ public class JNotepadPP extends JFrame {
 
 	public void initGUI() throws IOException {
 		Container cp = getContentPane();
+		
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BorderLayout());
 
 		JMenuBar bar = new JMenuBar();
 		JMenu menu = new JMenu();
@@ -100,7 +110,7 @@ public class JNotepadPP extends JFrame {
 
 		JToolBar tool = new JToolBar();
 		addToolButtons(tool);
-		cp.add(tool, BorderLayout.PAGE_START);
+		panel1.add(tool, BorderLayout.PAGE_START);
 
 		docModel = new DefaultMultipleDocumentModel();
 
@@ -186,7 +196,27 @@ public class JNotepadPP extends JFrame {
 		};
 		docModel.addMultipleDocumentListener(mdl);
 
-		cp.add((JTabbedPane) docModel, BorderLayout.CENTER);
+		panel1.add((JTabbedPane) docModel, BorderLayout.CENTER);
+		
+		cp.add(panel1, BorderLayout.CENTER);
+		
+		
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new GridLayout());
+		panel2.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		JLabel label1 = new JLabel();
+		label1.setText(" length: ");
+		label1.setHorizontalTextPosition(SwingConstants.LEFT);
+		panel2.add(label1, BorderLayout.WEST);
+		
+		JLabel label2 = new JLabel();
+		label2.setText(" Ln: " + " Col: " + " Sel: ");
+		label2.setHorizontalTextPosition(SwingConstants.LEFT);
+		panel2.add(label2, BorderLayout.CENTER);
+		
+		
+		cp.add(panel2, BorderLayout.PAGE_END);
 
 	}
 
@@ -244,7 +274,7 @@ public class JNotepadPP extends JFrame {
 					if (docModel.getCurrentDocument().getFilePath() == null) {
 						JFileChooser chooser = new JFileChooser();
 
-						int returnVal = chooser.showOpenDialog(getParent());
+						int returnVal = chooser.showSaveDialog(getParent());
 						if (returnVal == JFileChooser.APPROVE_OPTION) {
 							docModel.saveDocument(docModel.getCurrentDocument(),
 									Paths.get(chooser.getSelectedFile().getPath()));
