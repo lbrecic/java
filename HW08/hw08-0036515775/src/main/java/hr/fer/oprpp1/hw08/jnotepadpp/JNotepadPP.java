@@ -15,6 +15,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
@@ -34,8 +38,13 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Caret;
 
 public class JNotepadPP extends JFrame {
 
@@ -45,6 +54,8 @@ public class JNotepadPP extends JFrame {
 	private MultipleDocumentListener mdl;
 	private Clipboard clpbrd;
 	private ChangeListener listener;
+	private Timer t;
+	private DocumentListener l;
 
 	public JNotepadPP() throws IOException {
 		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -71,9 +82,11 @@ public class JNotepadPP extends JFrame {
 
 				switch (result) {
 				case JOptionPane.DEFAULT_OPTION:
+					t.cancel();
 					dispose();
 					break;
 				case JOptionPane.YES_OPTION:
+					t.cancel();
 					dispose();
 					break;
 				case JOptionPane.NO_OPTION:
@@ -87,7 +100,6 @@ public class JNotepadPP extends JFrame {
 
 		setTitle("JNotepad++");
 		setSize(700, 700);
-//		setLocation(300, 300);
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 
@@ -96,7 +108,45 @@ public class JNotepadPP extends JFrame {
 
 	public void initGUI() throws IOException {
 		Container cp = getContentPane();
-		
+
+		// ---
+
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new GridLayout());
+		panel2.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		JLabel label1 = new JLabel();
+		label1.setText(" length: ");
+		label1.setHorizontalTextPosition(SwingConstants.LEFT);
+		panel2.add(label1, BorderLayout.WEST);
+
+		JLabel label2 = new JLabel();
+		label2.setText(" Ln: " + " Col: " + " Sel: ");
+		label2.setHorizontalTextPosition(SwingConstants.LEFT);
+		panel2.add(label2, BorderLayout.CENTER);
+
+		JLabel label3 = new JLabel();
+		label3.setAlignmentX(SwingConstants.RIGHT);
+		label3.setHorizontalTextPosition(SwingConstants.RIGHT);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		t = new Timer();
+		t.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+
+				label3.setText(LocalDateTime.now().format(formatter));
+
+			}
+		}, 0, 1000);
+
+		panel2.add(label3, BorderLayout.EAST);
+
+		cp.add(panel2, BorderLayout.PAGE_END);
+
+		// ---
+
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout());
 
@@ -114,6 +164,26 @@ public class JNotepadPP extends JFrame {
 
 		docModel = new DefaultMultipleDocumentModel();
 
+//		l = new DocumentListener() {
+//
+//			@Override
+//			public void removeUpdate(DocumentEvent e) {
+//
+//			}
+//
+//			@Override
+//			public void insertUpdate(DocumentEvent e) {
+//
+//			}
+//
+//			@Override
+//			public void changedUpdate(DocumentEvent e) {
+//
+//			}
+//		};
+		
+		// ------------------------------ sto dalje? kako dobiti poziciju careta? 
+
 		listener = new ChangeListener() {
 
 			@Override
@@ -129,6 +199,36 @@ public class JNotepadPP extends JFrame {
 				} else {
 					setTitle("JNotepad++");
 				}
+				
+				// --------- novo, s caretom
+
+				docModel.getCurrentDocument().getTextComponent().getDocument().addDocumentListener(l);
+				docModel.getCurrentDocument().getTextComponent().addCaretListener(new CaretListener() {
+
+					@Override
+					public void caretUpdate(CaretEvent e) {
+						int sel = 0;
+						if (docModel.getCurrentDocument().getTextComponent().getSelectedText() != null) {
+							sel = docModel.getCurrentDocument().getTextComponent().getSelectedText().length();
+						}
+
+						int ln = 1, col = 1;
+						try {
+							int caretpos = docModel.getCurrentDocument().getTextComponent().getCaretPosition();
+							ln = docModel.getCurrentDocument().getTextComponent().getLineOfOffset(caretpos);
+							col = docModel.getCurrentDocument().getTextComponent().getLineStartOffset(ln);
+							ln += 1;
+
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+						label2.setText(" Ln: " + ln + " Col: " + col + " Sel: " + sel);
+					}
+
+				});
+				
+				// ----------
 			}
 
 		};
@@ -194,29 +294,14 @@ public class JNotepadPP extends JFrame {
 			}
 
 		};
+
 		docModel.addMultipleDocumentListener(mdl);
 
 		panel1.add((JTabbedPane) docModel, BorderLayout.CENTER);
-		
+
 		cp.add(panel1, BorderLayout.CENTER);
-		
-		
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(new GridLayout());
-		panel2.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		JLabel label1 = new JLabel();
-		label1.setText(" length: ");
-		label1.setHorizontalTextPosition(SwingConstants.LEFT);
-		panel2.add(label1, BorderLayout.WEST);
-		
-		JLabel label2 = new JLabel();
-		label2.setText(" Ln: " + " Col: " + " Sel: ");
-		label2.setHorizontalTextPosition(SwingConstants.LEFT);
-		panel2.add(label2, BorderLayout.CENTER);
-		
-		
-		cp.add(panel2, BorderLayout.PAGE_END);
+
+		// nekada ovdje islo panel2 i to ----------
 
 	}
 
@@ -280,7 +365,8 @@ public class JNotepadPP extends JFrame {
 									Paths.get(chooser.getSelectedFile().getPath()));
 						}
 					} else {
-						docModel.saveDocument(docModel.getCurrentDocument(), docModel.getCurrentDocument().getFilePath());
+						docModel.saveDocument(docModel.getCurrentDocument(),
+								docModel.getCurrentDocument().getFilePath());
 					}
 				}
 			}
@@ -325,7 +411,7 @@ public class JNotepadPP extends JFrame {
 		btn.setMnemonic(KeyEvent.VK_L);
 		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
-		
+
 		btn = new JMenuItem();
 		btn.setText("Info");
 		btn.addActionListener(new ActionListener() {
@@ -333,9 +419,9 @@ public class JNotepadPP extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (docModel.getCurrentDocument() != null) {
-					
+
 					int x = 0, y = 0, z = 0; // x = chars, y = non_blank, z = lines
-					
+
 					for (String line : docModel.getCurrentDocument().getTextComponent().getText().split("\n")) {
 						z++;
 						x += line.length();
@@ -345,21 +431,23 @@ public class JNotepadPP extends JFrame {
 								y++;
 							}
 						}
-						
+
 					}
 					x += z - 1;
-					
-					JOptionPane.showMessageDialog(getParent(), 
-							"Your document has " + x + " characters, " + y + " non-blank characters and " + z + " lines.", 
-							"Statistical info", JOptionPane.INFORMATION_MESSAGE);
-					
+
+					JOptionPane
+							.showMessageDialog(
+									getParent(), "Your document has " + x + " characters, " + y
+											+ " non-blank characters and " + z + " lines.",
+									"Statistical info", JOptionPane.INFORMATION_MESSAGE);
+
 				}
 			}
 		});
 		btn.setMnemonic(KeyEvent.VK_I);
 		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
-		
+
 		btn = new JMenuItem();
 		btn.setText("Exit");
 		btn.addActionListener(new ActionListener() {
@@ -381,9 +469,11 @@ public class JNotepadPP extends JFrame {
 
 				switch (result) {
 				case JOptionPane.DEFAULT_OPTION:
+					t.cancel();
 					dispose();
 					break;
 				case JOptionPane.YES_OPTION:
+					t.cancel();
 					dispose();
 					break;
 				case JOptionPane.NO_OPTION:
@@ -456,7 +546,7 @@ public class JNotepadPP extends JFrame {
 
 		tool.add(btn);
 	}
-	
+
 	public void tooltips() {
 		for (int index = 0; index < docModel.getDocuments().size(); index++) {
 			if (docModel.getDocument(index).getFilePath() == null) {
