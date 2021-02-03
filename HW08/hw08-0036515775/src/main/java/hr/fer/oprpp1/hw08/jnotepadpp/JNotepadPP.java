@@ -297,13 +297,69 @@ public class JNotepadPP extends JFrame {
 		menu.add(btn);
 		
 		btn = new JMenuItem();
-		btn.setText("Exit");
+		btn.setText("Info");
 		btn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (docModel.getCurrentDocument() != null) {
-					docModel.closeDocument(docModel.getCurrentDocument());
+					
+					int x = 0, y = 0, z = 0; // x = chars, y = non_blank, z = lines
+					
+					for (String line : docModel.getCurrentDocument().getTextComponent().getText().split("\n")) {
+						z++;
+						x += line.length();
+						line += '\n';
+						for (int i = 0; i < line.length(); i++) {
+							if (!Character.isWhitespace(line.charAt(i))) {
+								y++;
+							}
+						}
+						
+					}
+					x += z - 1;
+					
+					JOptionPane.showMessageDialog(getParent(), 
+							"Your document has " + x + " characters, " + y + " non-blank characters and " + z + " lines.", 
+							"Statistical info", JOptionPane.INFORMATION_MESSAGE);
+					
+				}
+			}
+		});
+		btn.setMnemonic(KeyEvent.VK_I);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK));
+		menu.add(btn);
+		
+		btn = new JMenuItem();
+		btn.setText("Exit");
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int result = JOptionPane.DEFAULT_OPTION;
+				if (docModel.getNumberOfDocuments() != 0) {
+					for (SingleDocumentModel sdm : docModel.getDocuments()) {
+						if (sdm.isModified()) {
+							result = JOptionPane.showOptionDialog(getParent(),
+									"There are unsaved documents! Are you sure you want to exit the program?",
+									"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
+									null, JOptionPane.NO_OPTION);
+							break;
+						}
+					}
+				}
+
+				switch (result) {
+				case JOptionPane.DEFAULT_OPTION:
+					dispose();
+					break;
+				case JOptionPane.YES_OPTION:
+					dispose();
+					break;
+				case JOptionPane.NO_OPTION:
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					break;
 				}
 			}
 		});

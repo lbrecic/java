@@ -1,6 +1,5 @@
 close document ne valja najbolje
 
-statistika datoteke
-
 spremanje na istoj lokaciji pod istim imenom - izbacuje li warning?
+
 
