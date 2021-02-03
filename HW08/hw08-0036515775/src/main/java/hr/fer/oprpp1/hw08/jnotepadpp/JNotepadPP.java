@@ -38,6 +38,7 @@ public class JNotepadPP extends JFrame {
 	private DefaultMultipleDocumentModel model;
 	private MultipleDocumentListener mdl;
 	private Clipboard clpbrd;
+	private ChangeListener listener;
 
 	public JNotepadPP() throws IOException {
 		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -102,7 +103,9 @@ public class JNotepadPP extends JFrame {
 		cp.add(tool, BorderLayout.PAGE_START);
 
 		model = new DefaultMultipleDocumentModel();
-		model.addChangeListener(new ChangeListener() {
+		
+		
+		listener = new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -115,7 +118,9 @@ public class JNotepadPP extends JFrame {
 				}
 			}
 
-		});
+		};
+		
+		model.addChangeListener(listener);
 		
 		mdl = new MultipleDocumentListener() {
 
@@ -152,7 +157,6 @@ public class JNotepadPP extends JFrame {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			;
 		});
 	}
 
@@ -239,6 +243,7 @@ public class JNotepadPP extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (model.getCurrentDocument() != null) {
+					model.closeDocument(model.getCurrentDocument());
 					if (model.getDocuments().size() > 1) {
 						int index = (model.getSelectedIndex() - 1) > -1 ? model.getSelectedIndex() - 1 : model.getSelectedIndex() + 1;
 						model.setCurrent(model.getDocuments().get(index));
@@ -246,7 +251,6 @@ public class JNotepadPP extends JFrame {
 						model.setCurrent(null);
 					}
 					model.removeTabAt(model.getSelectedIndex());
-					model.closeDocument(model.getCurrentDocument());
 				}
 			}
 		});

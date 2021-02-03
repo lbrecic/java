@@ -64,7 +64,9 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		setCurrent(newDocument);
 		addTab("unnamed", unmodified, new JScrollPane(newDocument.getTextComponent()));
 		
-		// obavijestiti listeners o promjeni dokumenta i promjeni viewa
+		for (MultipleDocumentListener mdl : listeners) {
+			mdl.documentAdded(current);
+		}
 		
 		return newDocument;
 	}
@@ -76,7 +78,13 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	public SingleDocumentModel loadDocument(Path path) {
 		for (SingleDocumentModel model : documents) {
 			if (model.getFilePath() != null && model.getFilePath().equals(path)) {
+				
+				for (MultipleDocumentListener mdl : listeners) {
+					mdl.currentDocumentChanged(current, model);
+				}
+				
 				setCurrent(model);
+				
 				return current;
 			}
 		}
@@ -99,11 +107,12 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		DefaultSingleDocumentModel model = new DefaultSingleDocumentModel(path, text);
 		model.addSingleDocumentListener(sdl);
 		setCurrent(model);
-		
 		documents.add(current);
 		addTab(current.getFilePath().getFileName().toString(), unmodified, new JScrollPane(current.getTextComponent()));
 		
-		// obavijestiti listeners o promjeni dokumenta i promjeni viewa
+		for (MultipleDocumentListener mdl : listeners) {
+			mdl.documentAdded(current);
+		}
 		
 		return current;
 	}
@@ -128,6 +137,11 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				null, null, JOptionPane.NO_OPTION);
 		} else {
 			documents.remove(model);
+			
+			for (MultipleDocumentListener mdl : listeners) {
+				mdl.documentRemoved(model);
+			}
+			
 		}
 	}
 
