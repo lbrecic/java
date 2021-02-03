@@ -64,6 +64,8 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		setCurrent(newDocument);
 		addTab("unnamed", unmodified, new JScrollPane(newDocument.getTextComponent()));
 		
+		// obavijestiti listeners o promjeni dokumenta i promjeni viewa
+		
 		return newDocument;
 	}
 
@@ -74,7 +76,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 	public SingleDocumentModel loadDocument(Path path) {
 		for (SingleDocumentModel model : documents) {
 			if (model.getFilePath() != null && model.getFilePath().equals(path)) {
-				setCurrent(model);;
+				setCurrent(model);
 				return current;
 			}
 		}
@@ -94,10 +96,14 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			e.printStackTrace();
 		}
 		
-		setCurrent(new DefaultSingleDocumentModel(path, text));
+		DefaultSingleDocumentModel model = new DefaultSingleDocumentModel(path, text);
+		model.addSingleDocumentListener(sdl);
+		setCurrent(model);
 		
 		documents.add(current);
 		addTab(current.getFilePath().getFileName().toString(), unmodified, new JScrollPane(current.getTextComponent()));
+		
+		// obavijestiti listeners o promjeni dokumenta i promjeni viewa
 		
 		return current;
 	}

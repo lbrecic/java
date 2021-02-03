@@ -9,6 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -20,9 +21,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
@@ -51,9 +54,10 @@ public class JNotepadPP extends JFrame {
 					for (SingleDocumentModel sdm : model.getDocuments()) {
 						if (sdm.isModified()) {
 							result = JOptionPane.showOptionDialog(getParent(),
-									"There are unsaved documents!" + "Are you sure you want to exit the program?",
+									"There are unsaved documents! Are you sure you want to exit the program?",
 									"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
 									null, JOptionPane.NO_OPTION);
+							break;
 						}
 					}
 				}
@@ -87,8 +91,9 @@ public class JNotepadPP extends JFrame {
 
 		JMenuBar bar = new JMenuBar();
 		JMenu menu = new JMenu();
-		menu.setText("Menu");
+		menu.setText("File");
 		addMenuButtons(menu);
+		menu.setMnemonic(KeyEvent.VK_F);
 		bar.add(menu);
 		this.setJMenuBar(bar);
 
@@ -111,6 +116,7 @@ public class JNotepadPP extends JFrame {
 			}
 
 		});
+		
 		mdl = new MultipleDocumentListener() {
 
 			@Override
@@ -124,14 +130,17 @@ public class JNotepadPP extends JFrame {
 
 			@Override
 			public void documentAdded(SingleDocumentModel model) {
+				
 			}
 
 			@Override
 			public void documentRemoved(SingleDocumentModel model) {
+				
 			}
 
 		};
 		model.addMultipleDocumentListener(mdl);
+		
 		cp.add((JTabbedPane) model, BorderLayout.CENTER);
 
 	}
@@ -148,7 +157,8 @@ public class JNotepadPP extends JFrame {
 	}
 
 	public void addMenuButtons(JMenu menu) {
-		JButton btn = new JButton();
+		
+		JMenuItem btn = new JMenuItem();
 		btn.setText("New");
 		btn.addActionListener(new ActionListener() {
 
@@ -157,10 +167,11 @@ public class JNotepadPP extends JFrame {
 				model.createNewDocument();
 			}
 		});
-
+		btn.setMnemonic(KeyEvent.VK_N);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.ALT_DOWN_MASK));
 		menu.add(btn);
 
-		btn = new JButton();
+		btn = new JMenuItem();
 		btn.setText("Open");
 		btn.addActionListener(new ActionListener() {
 
@@ -175,10 +186,11 @@ public class JNotepadPP extends JFrame {
 
 			}
 		});
-
+		btn.setMnemonic(KeyEvent.VK_O);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.ALT_DOWN_MASK));
 		menu.add(btn);
 
-		btn = new JButton();
+		btn = new JMenuItem();
 		btn.setText("Save");
 		btn.addActionListener(new ActionListener() {
 
@@ -197,11 +209,12 @@ public class JNotepadPP extends JFrame {
 
 			}
 		});
-
+		btn.setMnemonic(KeyEvent.VK_S);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.ALT_DOWN_MASK));
 		menu.add(btn);
 
-		btn = new JButton();
-		btn.setText("Save as");
+		btn = new JMenuItem();
+		btn.setText("Save As");
 		btn.addActionListener(new ActionListener() {
 
 			@Override
@@ -214,10 +227,12 @@ public class JNotepadPP extends JFrame {
 				}
 			}
 		});
-
+		btn.setMnemonic(KeyEvent.VK_A);
+		btn.setDisplayedMnemonicIndex(5);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK));
 		menu.add(btn);
 
-		btn = new JButton();
+		btn = new JMenuItem();
 		btn.setText("Close");
 		btn.addActionListener(new ActionListener() {
 
@@ -235,7 +250,8 @@ public class JNotepadPP extends JFrame {
 				}
 			}
 		});
-
+		btn.setMnemonic(KeyEvent.VK_C);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_DOWN_MASK));
 		menu.add(btn);
 
 	}

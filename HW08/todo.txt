@@ -3,3 +3,11 @@
 3) statistika datoteke
 4) spremanje na istoj lokaciji pod istim imenom - izbacuje li warning?
 5) problem 2, prije toga jos jednom provjeriti je li sve ostalo stima
+
+ne mijenja se naslov nakon spremanja unnamed datoteke
+hoveranjem se ne ispisuje cijela putanja
+gdje tocno obavijestavam modeldocumentlistenere da se ista mijenja? sto oni tocno trebaju odraditi? promjena viewa?
+promjena viewa nakon otvaranja, zatvaranja, stvaranja
+
+sto kada nema otvorenog dokumenta? onemoguciti save i save as kao sto sam onemogucio close
+
