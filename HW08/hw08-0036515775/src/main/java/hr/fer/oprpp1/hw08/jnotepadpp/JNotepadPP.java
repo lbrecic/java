@@ -35,14 +35,14 @@ public class JNotepadPP extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private DefaultMultipleDocumentModel model;
+	private DefaultMultipleDocumentModel docModel;
 	private MultipleDocumentListener mdl;
 	private Clipboard clpbrd;
 	private ChangeListener listener;
 
 	public JNotepadPP() throws IOException {
 		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-		
+
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		addWindowListener(new WindowAdapter() {
@@ -51,8 +51,8 @@ public class JNotepadPP extends JFrame {
 			public void windowClosing(WindowEvent e) {
 
 				int result = JOptionPane.DEFAULT_OPTION;
-				if (model.getNumberOfDocuments() != 0) {
-					for (SingleDocumentModel sdm : model.getDocuments()) {
+				if (docModel.getNumberOfDocuments() != 0) {
+					for (SingleDocumentModel sdm : docModel.getDocuments()) {
 						if (sdm.isModified()) {
 							result = JOptionPane.showOptionDialog(getParent(),
 									"There are unsaved documents! Are you sure you want to exit the program?",
@@ -102,26 +102,29 @@ public class JNotepadPP extends JFrame {
 		addToolButtons(tool);
 		cp.add(tool, BorderLayout.PAGE_START);
 
-		model = new DefaultMultipleDocumentModel();
-		
-		
+		docModel = new DefaultMultipleDocumentModel();
+
 		listener = new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				model.setCurrent(model.getDocuments().get(model.getSelectedIndex()));
+				if (docModel.getDocuments().size() > 0) {
+					docModel.setCurrent(docModel.getDocument(docModel.getSelectedIndex()));
 
-				if (model.getCurrent().getFilePath() == null) {
-					setTitle("unnamed");
+					if (docModel.getCurrent().getFilePath() == null) {
+						setTitle("unnamed");
+					} else {
+						setTitle(docModel.getCurrent().getFilePath().getFileName().toString());
+					}
 				} else {
-					setTitle(model.getCurrent().getFilePath().getFileName().toString());
+					setTitle("JNotepad++");
 				}
 			}
 
 		};
-		
-		model.addChangeListener(listener);
-		
+
+		docModel.addChangeListener(listener);
+
 		mdl = new MultipleDocumentListener() {
 
 			@Override
@@ -131,22 +134,59 @@ public class JNotepadPP extends JFrame {
 				} else {
 					setTitle(currentModel.getFilePath().getFileName().toString());
 				}
+				tooltips();
 			}
 
 			@Override
 			public void documentAdded(SingleDocumentModel model) {
-				
+				int index = 0;
+				for (SingleDocumentModel m : docModel.getDocuments()) {
+					if (m != model) {
+						index++;
+					} else {
+						break;
+					}
+				}
+				docModel.setSelectedIndex(index);
+
+				if (model.getFilePath() == null) {
+					setTitle("unnamed");
+				} else {
+					setTitle(model.getFilePath().getFileName().toString());
+				}
+				tooltips();
 			}
 
 			@Override
 			public void documentRemoved(SingleDocumentModel model) {
-				
+				int index = 0;
+				for (SingleDocumentModel m : docModel.getDocuments()) {
+					if (m != model) {
+						index++;
+					} else {
+						break;
+					}
+				}
+
+				int next = index - 1;
+				if (docModel.getDocuments().size() - 1 > 0) {
+					if (index == 0)
+						next = index + 1;
+					docModel.setSelectedIndex(next);
+				} else {
+					docModel.setCurrent(null);
+				}
+
+				docModel.removeTabAt(index);
+				docModel.getDocuments().remove(index);
+				tooltips();
+
 			}
 
 		};
-		model.addMultipleDocumentListener(mdl);
-		
-		cp.add((JTabbedPane) model, BorderLayout.CENTER);
+		docModel.addMultipleDocumentListener(mdl);
+
+		cp.add((JTabbedPane) docModel, BorderLayout.CENTER);
 
 	}
 
@@ -161,18 +201,18 @@ public class JNotepadPP extends JFrame {
 	}
 
 	public void addMenuButtons(JMenu menu) {
-		
+
 		JMenuItem btn = new JMenuItem();
 		btn.setText("New");
 		btn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.createNewDocument();
+				docModel.createNewDocument();
 			}
 		});
 		btn.setMnemonic(KeyEvent.VK_N);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.ALT_DOWN_MASK));
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
 
 		btn = new JMenuItem();
@@ -185,13 +225,13 @@ public class JNotepadPP extends JFrame {
 
 				int returnVal = chooser.showOpenDialog(getParent());
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					model.loadDocument(Paths.get(chooser.getSelectedFile().getPath()));
+					docModel.loadDocument(Paths.get(chooser.getSelectedFile().getPath()));
 				}
 
 			}
 		});
 		btn.setMnemonic(KeyEvent.VK_O);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.ALT_DOWN_MASK));
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
 
 		btn = new JMenuItem();
@@ -200,21 +240,23 @@ public class JNotepadPP extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (model.getCurrentDocument().getFilePath() == null) {
-					JFileChooser chooser = new JFileChooser();
+				if (docModel.getCurrentDocument() != null) {
+					if (docModel.getCurrentDocument().getFilePath() == null) {
+						JFileChooser chooser = new JFileChooser();
 
-					int returnVal = chooser.showOpenDialog(getParent());
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-						model.saveDocument(model.getCurrentDocument(), Paths.get(chooser.getSelectedFile().getPath()));
+						int returnVal = chooser.showOpenDialog(getParent());
+						if (returnVal == JFileChooser.APPROVE_OPTION) {
+							docModel.saveDocument(docModel.getCurrentDocument(),
+									Paths.get(chooser.getSelectedFile().getPath()));
+						}
+					} else {
+						docModel.saveDocument(docModel.getCurrentDocument(), docModel.getCurrentDocument().getFilePath());
 					}
-				} else {
-					model.saveDocument(model.getCurrentDocument(), model.getCurrentDocument().getFilePath());
 				}
-
 			}
 		});
 		btn.setMnemonic(KeyEvent.VK_S);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.ALT_DOWN_MASK));
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
 
 		btn = new JMenuItem();
@@ -223,17 +265,20 @@ public class JNotepadPP extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
+				if (docModel.getCurrentDocument() != null) {
+					JFileChooser chooser = new JFileChooser();
 
-				int returnVal = chooser.showOpenDialog(getParent());
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					model.saveDocument(model.getCurrentDocument(), Paths.get(chooser.getSelectedFile().getPath()));
+					int returnVal = chooser.showOpenDialog(getParent());
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						docModel.saveDocument(docModel.getCurrentDocument(),
+								Paths.get(chooser.getSelectedFile().getPath()));
+					}
 				}
 			}
 		});
 		btn.setMnemonic(KeyEvent.VK_A);
 		btn.setDisplayedMnemonicIndex(5);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK));
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
 
 		btn = new JMenuItem();
@@ -242,57 +287,67 @@ public class JNotepadPP extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (model.getCurrentDocument() != null) {
-					model.closeDocument(model.getCurrentDocument());
-					if (model.getDocuments().size() > 1) {
-						int index = (model.getSelectedIndex() - 1) > -1 ? model.getSelectedIndex() - 1 : model.getSelectedIndex() + 1;
-						model.setCurrent(model.getDocuments().get(index));
-					} else {
-						model.setCurrent(null);
-					}
-					model.removeTabAt(model.getSelectedIndex());
+				if (docModel.getCurrentDocument() != null) {
+					docModel.closeDocument(docModel.getCurrentDocument());
 				}
 			}
 		});
-		btn.setMnemonic(KeyEvent.VK_C);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_DOWN_MASK));
+		btn.setMnemonic(KeyEvent.VK_L);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
+		menu.add(btn);
+		
+		btn = new JMenuItem();
+		btn.setText("Exit");
+		btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (docModel.getCurrentDocument() != null) {
+					docModel.closeDocument(docModel.getCurrentDocument());
+				}
+			}
+		});
+		btn.setMnemonic(KeyEvent.VK_E);
+		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
 		menu.add(btn);
 
 	}
 
 	public void addToolButtons(JToolBar tool) {
-		
+
 		JButton btn = new JButton();
 		btn.setText("Cut");
 		btn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StringSelection selected = new StringSelection(model.getCurrentDocument().getTextComponent().getSelectedText());
+				StringSelection selected = new StringSelection(
+						docModel.getCurrentDocument().getTextComponent().getSelectedText());
 				clpbrd.setContents(selected, null);
-				model.getCurrentDocument().getTextComponent().setText(
-						model.getCurrentDocument().getTextComponent().getText().replace(
-						model.getCurrentDocument().getTextComponent().getSelectedText(), ""));
+				docModel.getCurrentDocument().getTextComponent()
+						.setText(docModel.getCurrentDocument().getTextComponent().getText()
+								.replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), ""));
 			}
-	
+
 		});
-		
+
 		tool.add(btn);
-		
+
 		btn = new JButton();
 		btn.setText("Copy");
 		btn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StringSelection selected = new StringSelection(model.getCurrentDocument().getTextComponent().getSelectedText());
+				StringSelection selected = new StringSelection(
+						docModel.getCurrentDocument().getTextComponent().getSelectedText());
 				clpbrd.setContents(selected, null);
 			}
-	
+
 		});
-		
+
 		tool.add(btn);
-		
+
 		btn = new JButton();
 		btn.setText("Paste");
 		btn.addActionListener(new ActionListener() {
@@ -302,17 +357,28 @@ public class JNotepadPP extends JFrame {
 				Transferable t = clpbrd.getContents(this);
 				if (t != null) {
 					try {
-						model.getCurrentDocument().getTextComponent().insert((String) t.getTransferData(DataFlavor.stringFlavor), 
-								model.getCurrentDocument().getTextComponent().getCaretPosition());
+						docModel.getCurrentDocument().getTextComponent().insert(
+								(String) t.getTransferData(DataFlavor.stringFlavor),
+								docModel.getCurrentDocument().getTextComponent().getCaretPosition());
 					} catch (UnsupportedFlavorException | IOException e1) {
 						e1.printStackTrace();
 					}
 				}
 			}
-	
+
 		});
-		
+
 		tool.add(btn);
+	}
+	
+	public void tooltips() {
+		for (int index = 0; index < docModel.getDocuments().size(); index++) {
+			if (docModel.getDocument(index).getFilePath() == null) {
+				docModel.setToolTipTextAt(index, "unnamed");
+			} else {
+				docModel.setToolTipTextAt(index, docModel.getDocument(index).getFilePath().toString());
+			}
+		}
 	}
 
 }

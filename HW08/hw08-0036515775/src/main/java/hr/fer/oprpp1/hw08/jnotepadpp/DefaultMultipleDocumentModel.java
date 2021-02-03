@@ -80,7 +80,7 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 			if (model.getFilePath() != null && model.getFilePath().equals(path)) {
 				
 				for (MultipleDocumentListener mdl : listeners) {
-					mdl.currentDocumentChanged(current, model);
+					mdl.documentAdded(model);
 				}
 				
 				setCurrent(model);
@@ -128,6 +128,10 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 		
 		model.setFilePath(newPath);
 		model.setModified(false);
+		
+		for (MultipleDocumentListener mdl : listeners) {
+			mdl.currentDocumentChanged(model, model);
+		}
 	}
 
 	public void closeDocument(SingleDocumentModel model) {
@@ -136,12 +140,11 @@ public class DefaultMultipleDocumentModel extends JTabbedPane implements Multipl
 				"Document unsaved!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, 
 				null, null, JOptionPane.NO_OPTION);
 		} else {
-			documents.remove(model);
 			
 			for (MultipleDocumentListener mdl : listeners) {
 				mdl.documentRemoved(model);
 			}
-			
+
 		}
 	}
 

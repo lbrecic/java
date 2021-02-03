@@ -4,18 +4,3 @@ statistika datoteke
 
 spremanje na istoj lokaciji pod istim imenom - izbacuje li warning?
 
-ne mijenja se naslov nakon spremanja unnamed datoteke
-
-hoveranjem se ne ispisuje cijela putanja
-
-gdje tocno obavijestavam modeldocumentlistenere da se ista mijenja? sto oni tocno trebaju odraditi? promjena viewa?
-
-promjena viewa nakon otvaranja, zatvaranja, stvaranja
-
-sto kada nema otvorenog dokumenta? onemoguciti save i save as kao sto sam onemogucio close
-
-
-
-
-nekako obavijestiti listenere kada dodam, maknem i slicno da promijeni view - setSelectedIndex? setSelectedComponent?
-
