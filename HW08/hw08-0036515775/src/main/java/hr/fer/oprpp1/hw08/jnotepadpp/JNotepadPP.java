@@ -22,6 +22,8 @@ import java.util.TimerTask;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -108,8 +110,6 @@ public class JNotepadPP extends JFrame {
 	public void initGUI() throws IOException {
 		Container cp = getContentPane();
 
-		// ---
-
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout());
 		panel2.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -143,22 +143,23 @@ public class JNotepadPP extends JFrame {
 		panel2.add(label3, BorderLayout.EAST);
 
 		cp.add(panel2, BorderLayout.PAGE_END);
-
-		// ---
-
-		JPanel panel1 = new JPanel();
-		panel1.setLayout(new BorderLayout());
+		
+		createActions();
 
 		JMenuBar bar = new JMenuBar();
 		JMenu menu = new JMenu();
 		menu.setText("File");
-		addMenuButtons(menu);
+		addFileMenuItems(menu);
 		menu.setMnemonic(KeyEvent.VK_F);
 		bar.add(menu);
 		this.setJMenuBar(bar);
 
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BorderLayout());
+		
 		JToolBar tool = new JToolBar();
-		addToolButtons(tool);
+		addToolBarItems(tool);
+		
 		panel1.add(tool, BorderLayout.PAGE_START);
 
 		docModel = new DefaultMultipleDocumentModel();
@@ -313,238 +314,6 @@ public class JNotepadPP extends JFrame {
 		});
 	}
 
-	public void addMenuButtons(JMenu menu) {
-
-		JMenuItem btn = new JMenuItem();
-		btn.setText("New");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				docModel.createNewDocument();
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_N);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-		btn = new JMenuItem();
-		btn.setText("Open");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-
-				int returnVal = chooser.showOpenDialog(getParent());
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					docModel.loadDocument(Paths.get(chooser.getSelectedFile().getPath()));
-				}
-
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_O);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-		btn = new JMenuItem();
-		btn.setText("Save");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (docModel.getCurrentDocument() != null) {
-					if (docModel.getCurrentDocument().getFilePath() == null) {
-						JFileChooser chooser = new JFileChooser();
-
-						int returnVal = chooser.showSaveDialog(getParent());
-						if (returnVal == JFileChooser.APPROVE_OPTION) {
-							docModel.saveDocument(docModel.getCurrentDocument(),
-									Paths.get(chooser.getSelectedFile().getPath()));
-						}
-					} else {
-						docModel.saveDocument(docModel.getCurrentDocument(),
-								docModel.getCurrentDocument().getFilePath());
-					}
-				}
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_S);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-		btn = new JMenuItem();
-		btn.setText("Save As");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (docModel.getCurrentDocument() != null) {
-					JFileChooser chooser = new JFileChooser();
-
-					int returnVal = chooser.showOpenDialog(getParent());
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-						docModel.saveDocument(docModel.getCurrentDocument(),
-								Paths.get(chooser.getSelectedFile().getPath()));
-					}
-				}
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_A);
-		btn.setDisplayedMnemonicIndex(5);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-		btn = new JMenuItem();
-		btn.setText("Close");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (docModel.getCurrentDocument() != null) {
-					docModel.closeDocument(docModel.getCurrentDocument());
-				}
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_L);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-		btn = new JMenuItem();
-		btn.setText("Info");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (docModel.getCurrentDocument() != null) {
-
-					int x = 0, y = 0, z = 0; // x = chars, y = non_blank, z = lines
-
-					for (String line : docModel.getCurrentDocument().getTextComponent().getText().split("\n")) {
-						z++;
-						x += line.length();
-						line += '\n';
-						for (int i = 0; i < line.length(); i++) {
-							if (!Character.isWhitespace(line.charAt(i))) {
-								y++;
-							}
-						}
-
-					}
-					x += z - 1;
-
-					JOptionPane
-							.showMessageDialog(
-									getParent(), "Your document has " + x + " characters, " + y
-											+ " non-blank characters and " + z + " lines.",
-									"Statistical info", JOptionPane.INFORMATION_MESSAGE);
-
-				}
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_I);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-		btn = new JMenuItem();
-		btn.setText("Exit");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.DEFAULT_OPTION;
-				if (docModel.getNumberOfDocuments() != 0) {
-					for (SingleDocumentModel sdm : docModel.getDocuments()) {
-						if (sdm.isModified()) {
-							result = JOptionPane.showOptionDialog(getParent(),
-									"There are unsaved documents! Are you sure you want to exit the program?",
-									"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
-									null, JOptionPane.NO_OPTION);
-							break;
-						}
-					}
-				}
-
-				switch (result) {
-				case JOptionPane.DEFAULT_OPTION:
-					t.cancel();
-					dispose();
-					break;
-				case JOptionPane.YES_OPTION:
-					t.cancel();
-					dispose();
-					break;
-				case JOptionPane.NO_OPTION:
-					break;
-				case JOptionPane.CANCEL_OPTION:
-					break;
-				}
-			}
-		});
-		btn.setMnemonic(KeyEvent.VK_E);
-		btn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
-		menu.add(btn);
-
-	}
-
-	public void addToolButtons(JToolBar tool) {
-
-		JButton btn = new JButton();
-		btn.setText("Cut");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				StringSelection selected = new StringSelection(
-						docModel.getCurrentDocument().getTextComponent().getSelectedText());
-				clpbrd.setContents(selected, null);
-				docModel.getCurrentDocument().getTextComponent()
-						.setText(docModel.getCurrentDocument().getTextComponent().getText()
-								.replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), ""));
-			}
-
-		});
-
-		tool.add(btn);
-
-		btn = new JButton();
-		btn.setText("Copy");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				StringSelection selected = new StringSelection(
-						docModel.getCurrentDocument().getTextComponent().getSelectedText());
-				clpbrd.setContents(selected, null);
-			}
-
-		});
-
-		tool.add(btn);
-
-		btn = new JButton();
-		btn.setText("Paste");
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Transferable t = clpbrd.getContents(this);
-				if (t != null) {
-					try {
-						docModel.getCurrentDocument().getTextComponent().insert(
-								(String) t.getTransferData(DataFlavor.stringFlavor),
-								docModel.getCurrentDocument().getTextComponent().getCaretPosition());
-					} catch (UnsupportedFlavorException | IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-
-		});
-
-		tool.add(btn);
-	}
-
 	public void tooltips() {
 		for (int index = 0; index < docModel.getDocuments().size(); index++) {
 			if (docModel.getDocument(index).getFilePath() == null) {
@@ -553,6 +322,258 @@ public class JNotepadPP extends JFrame {
 				docModel.setToolTipTextAt(index, docModel.getDocument(index).getFilePath().toString());
 			}
 		}
+	}
+	
+	private Action newDocumentAction = new AbstractAction() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			docModel.createNewDocument();
+		}
+		
+	};
+	
+	private Action openDocumentAction = new AbstractAction() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+
+			int returnVal = chooser.showOpenDialog(getParent());
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				docModel.loadDocument(Paths.get(chooser.getSelectedFile().getPath()));
+			}
+		}
+		
+	};
+	
+	private Action saveDocumentAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (docModel.getCurrentDocument() != null) {
+				if (docModel.getCurrentDocument().getFilePath() == null) {
+					JFileChooser chooser = new JFileChooser();
+
+					int returnVal = chooser.showSaveDialog(getParent());
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						docModel.saveDocument(docModel.getCurrentDocument(),
+								Paths.get(chooser.getSelectedFile().getPath()));
+					}
+				} else {
+					docModel.saveDocument(docModel.getCurrentDocument(),
+							docModel.getCurrentDocument().getFilePath());
+				}
+			}
+		}
+		
+	};
+	
+	private Action saveAsDocumentAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (docModel.getCurrentDocument() != null) {
+				JFileChooser chooser = new JFileChooser();
+
+				int returnVal = chooser.showOpenDialog(getParent());
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					docModel.saveDocument(docModel.getCurrentDocument(),
+							Paths.get(chooser.getSelectedFile().getPath()));
+				}
+			}
+		}
+		
+	};
+	
+	private Action closeDocumentAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (docModel.getCurrentDocument() != null) {
+				docModel.closeDocument(docModel.getCurrentDocument());
+			}
+		}
+		
+	};
+	
+	private Action infoDocumentAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (docModel.getCurrentDocument() != null) {
+
+				int x = 0, y = 0, z = 0; // x = chars, y = non_blank, z = lines
+
+				for (String line : docModel.getCurrentDocument().getTextComponent().getText().split("\n")) {
+					z++;
+					x += line.length();
+					line += '\n';
+					for (int i = 0; i < line.length(); i++) {
+						if (!Character.isWhitespace(line.charAt(i))) {
+							y++;
+						}
+					}
+
+				}
+				x += z - 1;
+
+				JOptionPane
+						.showMessageDialog(
+								getParent(), "Your document has " + x + " characters, " + y
+										+ " non-blank characters and " + z + " lines.",
+								"Statistical info", JOptionPane.INFORMATION_MESSAGE);
+
+			}
+		}
+		
+	};
+	
+	private Action exitDocumentAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int result = JOptionPane.DEFAULT_OPTION;
+			if (docModel.getNumberOfDocuments() != 0) {
+				for (SingleDocumentModel sdm : docModel.getDocuments()) {
+					if (sdm.isModified()) {
+						result = JOptionPane.showOptionDialog(getParent(),
+								"There are unsaved documents! Are you sure you want to exit the program?",
+								"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
+								null, JOptionPane.NO_OPTION);
+						break;
+					}
+				}
+			}
+
+			switch (result) {
+			case JOptionPane.DEFAULT_OPTION:
+				t.cancel();
+				dispose();
+				break;
+			case JOptionPane.YES_OPTION:
+				t.cancel();
+				dispose();
+				break;
+			case JOptionPane.NO_OPTION:
+				break;
+			case JOptionPane.CANCEL_OPTION:
+				break;
+			}
+		}
+		
+	};
+	
+	private Action cutAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			StringSelection selected = new StringSelection(
+					docModel.getCurrentDocument().getTextComponent().getSelectedText());
+			clpbrd.setContents(selected, null);
+			docModel.getCurrentDocument().getTextComponent()
+					.setText(docModel.getCurrentDocument().getTextComponent().getText()
+							.replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), ""));
+		}
+		
+	};
+	
+	private Action copyAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			StringSelection selected = new StringSelection(
+					docModel.getCurrentDocument().getTextComponent().getSelectedText());
+			clpbrd.setContents(selected, null);
+		}
+		
+	};
+	
+	private Action pasteAction = new AbstractAction() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Transferable t = clpbrd.getContents(this);
+			if (t != null) {
+				try {
+					docModel.getCurrentDocument().getTextComponent().insert(
+							(String) t.getTransferData(DataFlavor.stringFlavor),
+							docModel.getCurrentDocument().getTextComponent().getCaretPosition());
+				} catch (UnsupportedFlavorException | IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+	};
+	
+	
+	private void createActions() {
+		newDocumentAction.putValue(Action.NAME, "New");
+		newDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
+		newDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
+		newDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Creates new document.");
+		
+		openDocumentAction.putValue(Action.NAME, "Open");
+		openDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control O"));
+		openDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
+		openDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Opens existing document.");
+		
+		saveDocumentAction.putValue(Action.NAME, "Save");
+		saveDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
+		saveDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+		saveDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Saves document.");
+		
+		saveAsDocumentAction.putValue(Action.NAME, "Save As");
+		saveAsDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control A"));
+		saveAsDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
+		saveAsDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Saves as another document.");
+		
+		closeDocumentAction.putValue(Action.NAME, "Close");
+		closeDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control L"));
+		closeDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
+		closeDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Closes current document.");
+		
+		infoDocumentAction.putValue(Action.NAME, "Info");
+		infoDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control I"));
+		infoDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
+		infoDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Statistical information of current document.");
+		
+		exitDocumentAction.putValue(Action.NAME, "Exit");
+		exitDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control E"));
+		exitDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
+		exitDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Exit program.");
+		
+		cutAction.putValue(Action.NAME, "Cut");
+		cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
+		cutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
+		cutAction.putValue(Action.SHORT_DESCRIPTION, "Cut operation.");
+		
+		copyAction.putValue(Action.NAME, "Copy");
+		copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
+		copyAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+		copyAction.putValue(Action.SHORT_DESCRIPTION, "Copy operation.");
+		
+		pasteAction.putValue(Action.NAME, "Paste");
+		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
+		pasteAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
+		pasteAction.putValue(Action.SHORT_DESCRIPTION, "Paste operation.");
+	}
+	
+	private void addFileMenuItems(JMenu menu) {
+		menu.add(new JMenuItem(newDocumentAction));
+		menu.add(new JMenuItem(openDocumentAction));
+		menu.add(new JMenuItem(saveDocumentAction));
+		menu.add(new JMenuItem(saveAsDocumentAction));
+		menu.add(new JMenuItem(closeDocumentAction));
+		menu.addSeparator();
+		menu.add(new JMenuItem(exitDocumentAction));
+	}
+	
+	private void addToolBarItems(JToolBar tool) {
+		tool.add(new JButton(cutAction));
+		tool.add(new JButton(copyAction));
+		tool.add(new JButton(pasteAction));
 	}
 
 }
