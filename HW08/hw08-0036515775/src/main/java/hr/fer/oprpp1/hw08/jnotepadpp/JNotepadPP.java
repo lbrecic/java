@@ -17,13 +17,16 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -63,7 +66,7 @@ public class JNotepadPP extends JFrame {
 	private DocumentListener l;
 	private Timer t;
 	private FormLocalizationProvider flp = new FormLocalizationProvider(LocalizationProvider.getInstance(), this);
-
+	
 	public JNotepadPP() throws IOException {
 		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
 
@@ -113,10 +116,14 @@ public class JNotepadPP extends JFrame {
 
 		LJMenu languagesMenu = new LJMenu("lan", flp);
 		addLanguagesMenuItems(languagesMenu);
+		
+		LJMenu toolsMenu = new LJMenu("tools", flp);
+		addToolsMenuItems(toolsMenu);
 
 		bar.add(fileMenu);
 		bar.add(editMenu);
 		bar.add(languagesMenu);
+		bar.add(toolsMenu);
 
 		this.setJMenuBar(bar);
 
@@ -174,7 +181,7 @@ public class JNotepadPP extends JFrame {
 						int sel = 0;
 						if (docModel.getCurrentDocument().getTextComponent().getSelectedText() != null) {
 							sel = docModel.getCurrentDocument().getTextComponent().getSelectedText().length();
-						}
+						} 
 
 						int ln = 1, col = 1;
 						try {
@@ -495,8 +502,126 @@ public class JNotepadPP extends JFrame {
 		}
 
 	};
+	
+	private Action toUppercaseAction = new LocalizableAction("up", flp) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			StringSelection selected = new StringSelection(
+					docModel.getCurrentDocument().getTextComponent().getSelectedText());
+			
+			Locale locale = new Locale(LocalizationProvider.getInstance().getLanguage());
+			
+			String upper = "";
+			try {
+				upper = (String)selected.getTransferData(DataFlavor.stringFlavor);
+			} catch (UnsupportedFlavorException | IOException e1) {
+				e1.printStackTrace();
+			}
+			upper = upper.toUpperCase(locale);
+			
+			
+			docModel.getCurrentDocument().getTextComponent().setText(docModel.getCurrentDocument().getTextComponent()
+					.getText().replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), upper));
+		}
+
+	};
+	
+	private Action toLowercaseAction = new LocalizableAction("low", flp) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			StringSelection selected = new StringSelection(
+					docModel.getCurrentDocument().getTextComponent().getSelectedText());
+			
+			Locale locale = new Locale(LocalizationProvider.getInstance().getLanguage());
+			
+			String lower = "";
+			try {
+				lower = (String)selected.getTransferData(DataFlavor.stringFlavor);
+			} catch (UnsupportedFlavorException | IOException e1) {
+				e1.printStackTrace();
+			}
+			lower = lower.toLowerCase(locale);
+			
+			docModel.getCurrentDocument().getTextComponent().setText(docModel.getCurrentDocument().getTextComponent()
+					.getText().replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), lower));
+		}
+
+	};
+	
+	private Action invertCaseAction = new LocalizableAction("inv", flp) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			StringSelection selected = new StringSelection(
+					docModel.getCurrentDocument().getTextComponent().getSelectedText());
+			
+			Locale locale = new Locale(LocalizationProvider.getInstance().getLanguage());
+			
+			String invert = "";
+			try {
+				invert = (String)selected.getTransferData(DataFlavor.stringFlavor);
+			} catch (UnsupportedFlavorException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			StringBuilder sb = new StringBuilder();
+			for (Character c : invert.toCharArray()) {
+				if (Character.isLowerCase(c)) {
+					sb.append(Character.toUpperCase(c));
+				} else {
+					sb.append(Character.toLowerCase(c));
+				}
+			}
+			
+			docModel.getCurrentDocument().getTextComponent().setText(docModel.getCurrentDocument().getTextComponent()
+					.getText().replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), sb.toString()));
+		}
+
+	};
+	
+	private Action ascendingAction = new LocalizableAction("asc", flp) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+
+	};
+	
+	private Action descendingAction = new LocalizableAction("desc", flp) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+
+	};
+	
+	private Action uniqueAction = new LocalizableAction("unique", flp) {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+
+	};
 
 	private void createActions() {
+		
 		newDocumentAction.putValue(Action.NAME, flp.getString("new"));
 		newDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
 		newDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
@@ -546,6 +671,14 @@ public class JNotepadPP extends JFrame {
 		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
 		pasteAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
 		pasteAction.putValue(Action.SHORT_DESCRIPTION, "Paste operation.");
+		
+		toUppercaseAction.putValue(Action.NAME, flp.getString("up"));
+		toLowercaseAction.putValue(Action.NAME, flp.getString("low"));
+		invertCaseAction.putValue(Action.NAME, flp.getString("inv"));
+		ascendingAction.putValue(Action.NAME, flp.getString("asc"));
+		descendingAction.putValue(Action.NAME, flp.getString("desc"));
+		uniqueAction.putValue(Action.NAME, flp.getString("unique"));
+
 	}
 
 	private void addFileMenuItems(JMenu menu) {
@@ -594,6 +727,52 @@ public class JNotepadPP extends JFrame {
 			}
 		});
 		menu.add(de);
+	}
+	
+	private void addToolsMenuItems(JMenu menu) {
+		LJMenu change = new LJMenu("case", flp);
+		change.add(new LJMenuItem(toUppercaseAction, "up", flp));
+		change.add(new LJMenuItem(toLowercaseAction, "low", flp));
+		change.add(new LJMenuItem(invertCaseAction, "inv", flp));
+		
+		menu.add(change);
+		
+		LJMenu sort = new LJMenu("sort", flp);
+		sort.add(new LJMenuItem(ascendingAction, "asc", flp));
+		sort.add(new LJMenuItem(descendingAction, "desc", flp));
+		
+		menu.add(sort);
+		
+		LJMenuItem unique = new LJMenuItem(uniqueAction, "unique", flp);
+		menu.add(unique);
+		
+		change.setEnabled(false);
+		sort.setEnabled(false);
+		unique.setEnabled(false);
+		
+		docModel.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				docModel.getCurrentDocument().getTextComponent().addCaretListener(new CaretListener() {
+					
+					@Override
+					public void caretUpdate(CaretEvent e) {
+						if (docModel.getCurrentDocument().getTextComponent().getSelectedText() != null) {
+							change.setEnabled(true);
+							sort.setEnabled(true);
+							unique.setEnabled(true);
+						} else {
+							change.setEnabled(false);
+							sort.setEnabled(false);
+							unique.setEnabled(false);
+						}
+					}
+					
+				});
+			}
+			
+		});
 	}
 
 	private void addToolBarItems(JToolBar tool) {
