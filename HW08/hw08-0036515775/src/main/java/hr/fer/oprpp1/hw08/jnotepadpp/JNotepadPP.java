@@ -9,6 +9,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -21,10 +22,8 @@ import java.util.TimerTask;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -46,6 +45,14 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import hr.fer.oprpp1.hw08.jnotepadpp.local.FormLocalizationProvider;
+import hr.fer.oprpp1.hw08.jnotepadpp.local.LJButton;
+import hr.fer.oprpp1.hw08.jnotepadpp.local.LJLabel;
+import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenu;
+import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenuItem;
+import hr.fer.oprpp1.hw08.jnotepadpp.local.LocalizableAction;
+import hr.fer.oprpp1.hw08.jnotepadpp.local.LocalizationProvider;
+
 public class JNotepadPP extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -53,7 +60,9 @@ public class JNotepadPP extends JFrame {
 	private DefaultMultipleDocumentModel docModel;
 	private Clipboard clpbrd;
 	private ChangeListener listener;
+	private DocumentListener l;
 	private Timer t;
+	private FormLocalizationProvider flp = new FormLocalizationProvider(LocalizationProvider.getInstance(), this);
 
 	public JNotepadPP() throws IOException {
 		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -95,16 +104,20 @@ public class JNotepadPP extends JFrame {
 		docModel.addMultipleDocumentListener(mdl);
 
 		JMenuBar bar = new JMenuBar();
-		
-		JMenu fileMenu = new JMenu("File");
+
+		LJMenu fileMenu = new LJMenu("file", flp);
 		addFileMenuItems(fileMenu);
-		
-		JMenu editMenu = new JMenu("Edit");
+
+		LJMenu editMenu = new LJMenu("edit", flp);
 		addEditMenuItems(editMenu);
-		
+
+		LJMenu languagesMenu = new LJMenu("lan", flp);
+		addLanguagesMenuItems(languagesMenu);
+
 		bar.add(fileMenu);
 		bar.add(editMenu);
-		
+		bar.add(languagesMenu);
+
 		this.setJMenuBar(bar);
 
 		JPanel panel1 = new JPanel();
@@ -129,59 +142,22 @@ public class JNotepadPP extends JFrame {
 			}
 		});
 	}
-
-	private void addStatusPanel(JPanel panel2) {
-		JLabel label1 = new JLabel();
-		label1.setText(" length: ");
-		label1.setHorizontalTextPosition(SwingConstants.LEFT);
-		panel2.add(label1, BorderLayout.WEST);
-
-		JLabel label2 = new JLabel();
-		label2.setText(" Ln: " + " Col: " + " Sel: ");
-		label2.setHorizontalTextPosition(SwingConstants.LEFT);
-		panel2.add(label2, BorderLayout.CENTER);
-
-		JLabel label3 = new JLabel();
-		label3.setAlignmentX(SwingConstants.RIGHT);
-		label3.setHorizontalTextPosition(SwingConstants.RIGHT);
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-		t = new Timer();
-		t.scheduleAtFixedRate(new TimerTask() {
-
-			@Override
-			public void run() {
-
-				label3.setText(LocalDateTime.now().format(formatter));
-
-			}
-		}, 0, 1000);
-
-		panel2.add(label3, BorderLayout.EAST);
-
-		DocumentListener l = new DocumentListener() {
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				label1.setText(" length: " + docModel.getCurrentDocument().getTextComponent().getText().length());
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				label1.setText(" length: " + docModel.getCurrentDocument().getTextComponent().getText().length());
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				label1.setText(" length: " + docModel.getCurrentDocument().getTextComponent().getText().length());
-			}
-		};
+	
+	private void addCaretPanel(JPanel panel) {
+		
+		LJLabel line = new LJLabel("line", flp);
+		LJLabel column = new LJLabel("col", flp);
+		LJLabel select = new LJLabel("sel", flp);
+		
+		panel.add(line, BorderLayout.WEST);
+		panel.add(column, BorderLayout.CENTER);
+		panel.add(select, BorderLayout.EAST);
 
 		listener = new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if (docModel.getDocuments().size() > 0) {
+				if (docModel.getSelectedIndex() >= 0) {
 					docModel.setCurrent(docModel.getDocument(docModel.getSelectedIndex()));
 
 					if (docModel.getCurrent().getFilePath() == null) {
@@ -189,10 +165,7 @@ public class JNotepadPP extends JFrame {
 					} else {
 						setTitle(docModel.getCurrent().getFilePath().getFileName().toString());
 					}
-				} else {
-					setTitle("JNotepad++");
-				}
-
+					
 				docModel.getCurrentDocument().getTextComponent().getDocument().addDocumentListener(l);
 				docModel.getCurrentDocument().getTextComponent().addCaretListener(new CaretListener() {
 
@@ -215,12 +188,70 @@ public class JNotepadPP extends JFrame {
 							ex.printStackTrace();
 						}
 
-						label2.setText(" Ln: " + ln + " Col: " + col + " Sel: " + sel);
+						line.setText(flp.getString("line") + ": " + ln); 
+						column.setText(flp.getString("col") + ": " + col);
+						select.setText(flp.getString("sel") + ": " + sel);
 					}
 
 				});
+				
+				} else {
+					setTitle("JNotepad++");
+					line.setText(flp.getString("line") + ": "); 
+					column.setText(flp.getString("col") + ": ");
+					select.setText(flp.getString("sel") + ": ");
+				}
 			}
 		};
+	}
+
+	private void addStatusPanel(JPanel panel2) {
+		LJLabel label1 = new LJLabel("length", flp);
+		label1.setHorizontalTextPosition(SwingConstants.LEFT);
+		panel2.add(label1, BorderLayout.WEST);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout());
+		panel.setAlignmentX(LEFT_ALIGNMENT);
+		addCaretPanel(panel);
+		panel2.add(panel, BorderLayout.CENTER);
+
+		JLabel label3 = new JLabel();
+		label3.setAlignmentX(SwingConstants.RIGHT);
+		label3.setHorizontalTextPosition(SwingConstants.RIGHT);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		t = new Timer();
+		t.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+
+				label3.setText(LocalDateTime.now().format(formatter));
+
+			}
+		}, 0, 1000);
+
+		panel2.add(label3, BorderLayout.EAST);
+
+		l = new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				label1.setText(flp.getString("length" )+ " " + docModel.getCurrentDocument().getTextComponent().getText().length());
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				label1.setText(flp.getString("length" )+ " " + docModel.getCurrentDocument().getTextComponent().getText().length());
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				label1.setText(flp.getString("length" )+ " " + docModel.getCurrentDocument().getTextComponent().getText().length());
+			}
+		};
+
 	}
 
 	private MultipleDocumentListener mdl = new MultipleDocumentListener() {
@@ -292,7 +323,7 @@ public class JNotepadPP extends JFrame {
 		}
 	}
 
-	private Action newDocumentAction = new AbstractAction() {
+	private Action newDocumentAction = new LocalizableAction("new", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -303,7 +334,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action openDocumentAction = new AbstractAction() {
+	private Action openDocumentAction = new LocalizableAction("open", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -319,7 +350,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action saveDocumentAction = new AbstractAction() {
+	private Action saveDocumentAction = new LocalizableAction("save", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -342,7 +373,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action saveAsDocumentAction = new AbstractAction() {
+	private Action saveAsDocumentAction = new LocalizableAction("saveas", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -361,7 +392,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action closeDocumentAction = new AbstractAction() {
+	private Action closeDocumentAction = new LocalizableAction("close", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -374,7 +405,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action infoDocumentAction = new AbstractAction() {
+	private Action infoDocumentAction = new LocalizableAction("info", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -406,7 +437,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action exitDocumentAction = new AbstractAction() {
+	private Action exitDocumentAction = new LocalizableAction("exit", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -417,7 +448,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action cutAction = new AbstractAction() {
+	private Action cutAction = new LocalizableAction("cut", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -432,7 +463,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action copyAction = new AbstractAction() {
+	private Action copyAction = new LocalizableAction("copy", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -445,7 +476,7 @@ public class JNotepadPP extends JFrame {
 
 	};
 
-	private Action pasteAction = new AbstractAction() {
+	private Action pasteAction = new LocalizableAction("paste", flp) {
 
 		private static final long serialVersionUID = 1L;
 
@@ -466,80 +497,112 @@ public class JNotepadPP extends JFrame {
 	};
 
 	private void createActions() {
-		newDocumentAction.putValue(Action.NAME, "New");
+		newDocumentAction.putValue(Action.NAME, flp.getString("new"));
 		newDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
 		newDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 		newDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Creates new document.");
 
-		openDocumentAction.putValue(Action.NAME, "Open");
+		openDocumentAction.putValue(Action.NAME, flp.getString("open"));
 		openDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control O"));
 		openDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
 		openDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Opens existing document.");
 
-		saveDocumentAction.putValue(Action.NAME, "Save");
+		saveDocumentAction.putValue(Action.NAME, flp.getString("save"));
 		saveDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
 		saveDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
 		saveDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Saves document.");
 
-		saveAsDocumentAction.putValue(Action.NAME, "Save As");
+		saveAsDocumentAction.putValue(Action.NAME, flp.getString("saveas"));
 		saveAsDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control A"));
 		saveAsDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 		saveAsDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Saves as another document.");
 
-		closeDocumentAction.putValue(Action.NAME, "Close");
+		closeDocumentAction.putValue(Action.NAME, flp.getString("close"));
 		closeDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control L"));
 		closeDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
 		closeDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Closes current document.");
 
-		infoDocumentAction.putValue(Action.NAME, "Info");
+		infoDocumentAction.putValue(Action.NAME, flp.getString("info"));
 		infoDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control I"));
 		infoDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
 		infoDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Statistical information of current document.");
 
-		exitDocumentAction.putValue(Action.NAME, "Exit");
+		exitDocumentAction.putValue(Action.NAME, flp.getString("exit"));
 		exitDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control E"));
 		exitDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
 		exitDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Exit program.");
 
-		cutAction.putValue(Action.NAME, "Cut");
+		cutAction.putValue(Action.NAME, flp.getString("cut"));
 		cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
 		cutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
 		cutAction.putValue(Action.SHORT_DESCRIPTION, "Cut operation.");
 
-		copyAction.putValue(Action.NAME, "Copy");
+		copyAction.putValue(Action.NAME, flp.getString("copy"));
 		copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
 		copyAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
 		copyAction.putValue(Action.SHORT_DESCRIPTION, "Copy operation.");
 
-		pasteAction.putValue(Action.NAME, "Paste");
+		pasteAction.putValue(Action.NAME, flp.getString("paste"));
 		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
 		pasteAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
 		pasteAction.putValue(Action.SHORT_DESCRIPTION, "Paste operation.");
 	}
 
 	private void addFileMenuItems(JMenu menu) {
-		menu.add(new JMenuItem(newDocumentAction));
-		menu.add(new JMenuItem(openDocumentAction));
-		menu.add(new JMenuItem(saveDocumentAction));
-		menu.add(new JMenuItem(saveAsDocumentAction));
-		menu.add(new JMenuItem(closeDocumentAction));
+		menu.add(new LJMenuItem(newDocumentAction, "new", flp));
+		menu.add(new LJMenuItem(openDocumentAction, "open", flp));
+		menu.add(new LJMenuItem(saveDocumentAction, "save", flp));
+		menu.add(new LJMenuItem(saveAsDocumentAction, "saveas", flp));
+		menu.add(new LJMenuItem(closeDocumentAction, "close", flp));
 		menu.addSeparator();
-		menu.add(new JMenuItem(exitDocumentAction));
+		menu.add(new LJMenuItem(exitDocumentAction, "exit", flp));
 	}
-	
+
 	private void addEditMenuItems(JMenu menu) {
-		menu.add(new JMenuItem(cutAction));
-		menu.add(new JMenuItem(copyAction));
-		menu.add(new JMenuItem(pasteAction));
+		menu.add(new LJMenuItem(cutAction, "cut", flp));
+		menu.add(new LJMenuItem(copyAction, "copy", flp));
+		menu.add(new LJMenuItem(pasteAction, "paste", flp));
+	}
+
+	private void addLanguagesMenuItems(JMenu menu) {
+		JMenuItem hr = new JMenuItem("hr");
+		hr.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LocalizationProvider.getInstance().setLanguage("hr");
+			}
+		});
+		menu.add(hr);
+		
+		JMenuItem en = new JMenuItem("en");
+		en.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LocalizationProvider.getInstance().setLanguage("en");
+			}
+		});
+		menu.add(en);
+		
+		JMenuItem de = new JMenuItem("de");
+		de.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LocalizationProvider.getInstance().setLanguage("de");
+			}
+		});
+		menu.add(de);
 	}
 
 	private void addToolBarItems(JToolBar tool) {
-		tool.add(new JButton(openDocumentAction));
-		tool.add(new JButton(saveDocumentAction));
+		tool.add(new LJButton(openDocumentAction, "open", flp));
+		tool.add(new LJButton(saveDocumentAction, "save", flp));
 		tool.addSeparator();
-		tool.add(new JButton(cutAction));
-		tool.add(new JButton(copyAction));
-		tool.add(new JButton(pasteAction));
+		tool.add(new LJButton(cutAction, "cut", flp));
+		tool.add(new LJButton(copyAction, "copy", flp));
+		tool.add(new LJButton(pasteAction, "paste", flp));
 	}
 
 	private void exitNotepad() {
