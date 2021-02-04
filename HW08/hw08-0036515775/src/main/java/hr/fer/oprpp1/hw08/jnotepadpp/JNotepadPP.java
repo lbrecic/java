@@ -9,7 +9,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -52,11 +51,9 @@ public class JNotepadPP extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private DefaultMultipleDocumentModel docModel;
-	private MultipleDocumentListener mdl;
 	private Clipboard clpbrd;
 	private ChangeListener listener;
 	private Timer t;
-	private DocumentListener l;
 
 	public JNotepadPP() throws IOException {
 		clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -67,34 +64,7 @@ public class JNotepadPP extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-
-				int result = JOptionPane.DEFAULT_OPTION;
-				if (docModel.getNumberOfDocuments() != 0) {
-					for (SingleDocumentModel sdm : docModel.getDocuments()) {
-						if (sdm.isModified()) {
-							result = JOptionPane.showOptionDialog(getParent(),
-									"There are unsaved documents! Are you sure you want to exit the program?",
-									"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
-									null, JOptionPane.NO_OPTION);
-							break;
-						}
-					}
-				}
-
-				switch (result) {
-				case JOptionPane.DEFAULT_OPTION:
-					t.cancel();
-					dispose();
-					break;
-				case JOptionPane.YES_OPTION:
-					t.cancel();
-					dispose();
-					break;
-				case JOptionPane.NO_OPTION:
-					break;
-				case JOptionPane.CANCEL_OPTION:
-					break;
-				}
+				exitNotepad();
 			}
 
 		});
@@ -110,10 +80,52 @@ public class JNotepadPP extends JFrame {
 	public void initGUI() throws IOException {
 		Container cp = getContentPane();
 
+		createActions();
+
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout());
 		panel2.setBorder(BorderFactory.createLineBorder(Color.black));
 
+		addStatusPanel(panel2);
+
+		cp.add(panel2, BorderLayout.PAGE_END);
+
+		docModel = new DefaultMultipleDocumentModel();
+		docModel.addChangeListener(listener);
+		docModel.addMultipleDocumentListener(mdl);
+
+		JMenuBar bar = new JMenuBar();
+		JMenu menu = new JMenu();
+		menu.setText("File");
+		addFileMenuItems(menu);
+		menu.setMnemonic(KeyEvent.VK_F);
+		bar.add(menu);
+		this.setJMenuBar(bar);
+
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BorderLayout());
+
+		JToolBar tool = new JToolBar();
+		addToolBarItems(tool);
+
+		panel1.add(tool, BorderLayout.PAGE_START);
+		panel1.add((JTabbedPane) docModel, BorderLayout.CENTER);
+
+		cp.add(panel1, BorderLayout.CENTER);
+
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			try {
+				new JNotepadPP().setVisible(true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private void addStatusPanel(JPanel panel2) {
 		JLabel label1 = new JLabel();
 		label1.setText(" length: ");
 		label1.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -142,49 +154,21 @@ public class JNotepadPP extends JFrame {
 
 		panel2.add(label3, BorderLayout.EAST);
 
-		cp.add(panel2, BorderLayout.PAGE_END);
-		
-		createActions();
-
-		JMenuBar bar = new JMenuBar();
-		JMenu menu = new JMenu();
-		menu.setText("File");
-		addFileMenuItems(menu);
-		menu.setMnemonic(KeyEvent.VK_F);
-		bar.add(menu);
-		this.setJMenuBar(bar);
-
-		JPanel panel1 = new JPanel();
-		panel1.setLayout(new BorderLayout());
-		
-		JToolBar tool = new JToolBar();
-		addToolBarItems(tool);
-		
-		panel1.add(tool, BorderLayout.PAGE_START);
-
-		docModel = new DefaultMultipleDocumentModel();
-
-		l = new DocumentListener() {
+		DocumentListener l = new DocumentListener() {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				label1.setText(" length: " + 
-						docModel.getCurrentDocument().getTextComponent().getText().length()
-				);
+				label1.setText(" length: " + docModel.getCurrentDocument().getTextComponent().getText().length());
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				label1.setText(" length: " + 
-						docModel.getCurrentDocument().getTextComponent().getText().length()
-				);
+				label1.setText(" length: " + docModel.getCurrentDocument().getTextComponent().getText().length());
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				label1.setText(" length: " + 
-						docModel.getCurrentDocument().getTextComponent().getText().length()
-				);
+				label1.setText(" length: " + docModel.getCurrentDocument().getTextComponent().getText().length());
 			}
 		};
 
@@ -231,88 +215,67 @@ public class JNotepadPP extends JFrame {
 
 				});
 			}
-
 		};
-
-		docModel.addChangeListener(listener);
-
-		mdl = new MultipleDocumentListener() {
-
-			@Override
-			public void currentDocumentChanged(SingleDocumentModel previousModel, SingleDocumentModel currentModel) {
-				if (currentModel.getFilePath() == null) {
-					setTitle("unnamed");
-				} else {
-					setTitle(currentModel.getFilePath().getFileName().toString());
-				}
-				tooltips();
-			}
-
-			@Override
-			public void documentAdded(SingleDocumentModel model) {
-				int index = 0;
-				for (SingleDocumentModel m : docModel.getDocuments()) {
-					if (m != model) {
-						index++;
-					} else {
-						break;
-					}
-				}
-				docModel.setSelectedIndex(index);
-
-				if (model.getFilePath() == null) {
-					setTitle("unnamed");
-				} else {
-					setTitle(model.getFilePath().getFileName().toString());
-				}
-				tooltips();
-			}
-
-			@Override
-			public void documentRemoved(SingleDocumentModel model) {
-				int index = 0;
-				for (SingleDocumentModel m : docModel.getDocuments()) {
-					if (m != model) {
-						index++;
-					} else {
-						break;
-					}
-				}
-
-				int next = index - 1;
-				if (docModel.getDocuments().size() - 1 > 0) {
-					if (index == 0)
-						next = index + 1;
-					docModel.setSelectedIndex(next);
-				} else {
-					docModel.setCurrent(null);
-				}
-
-				docModel.removeTabAt(index);
-				docModel.getDocuments().remove(index);
-				tooltips();
-
-			}
-
-		};
-
-		docModel.addMultipleDocumentListener(mdl);
-
-		panel1.add((JTabbedPane) docModel, BorderLayout.CENTER);
-
-		cp.add(panel1, BorderLayout.CENTER);
-
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			try {
-				new JNotepadPP().setVisible(true);
-			} catch (IOException e) {
-				e.printStackTrace();
+	private MultipleDocumentListener mdl = new MultipleDocumentListener() {
+
+		@Override
+		public void currentDocumentChanged(SingleDocumentModel previousModel, SingleDocumentModel currentModel) {
+			if (currentModel.getFilePath() == null) {
+				setTitle("unnamed");
+			} else {
+				setTitle(currentModel.getFilePath().getFileName().toString());
 			}
-		});
-	}
+			tooltips();
+		}
+
+		@Override
+		public void documentAdded(SingleDocumentModel model) {
+			int index = 0;
+			for (SingleDocumentModel m : docModel.getDocuments()) {
+				if (m != model) {
+					index++;
+				} else {
+					break;
+				}
+			}
+			docModel.setSelectedIndex(index);
+
+			if (model.getFilePath() == null) {
+				setTitle("unnamed");
+			} else {
+				setTitle(model.getFilePath().getFileName().toString());
+			}
+			tooltips();
+		}
+
+		@Override
+		public void documentRemoved(SingleDocumentModel model) {
+			int index = 0;
+			for (SingleDocumentModel m : docModel.getDocuments()) {
+				if (m != model) {
+					index++;
+				} else {
+					break;
+				}
+			}
+
+			int next = index - 1;
+			if (docModel.getDocuments().size() - 1 > 0) {
+				if (index == 0)
+					next = index + 1;
+				docModel.setSelectedIndex(next);
+			} else {
+				docModel.setCurrent(null);
+			}
+
+			docModel.removeTabAt(index);
+			docModel.getDocuments().remove(index);
+			tooltips();
+		}
+
+	};
 
 	public void tooltips() {
 		for (int index = 0; index < docModel.getDocuments().size(); index++) {
@@ -323,17 +286,21 @@ public class JNotepadPP extends JFrame {
 			}
 		}
 	}
-	
+
 	private Action newDocumentAction = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			docModel.createNewDocument();
 		}
-		
+
 	};
-	
+
 	private Action openDocumentAction = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -344,11 +311,13 @@ public class JNotepadPP extends JFrame {
 				docModel.loadDocument(Paths.get(chooser.getSelectedFile().getPath()));
 			}
 		}
-		
+
 	};
-	
+
 	private Action saveDocumentAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (docModel.getCurrentDocument() != null) {
@@ -361,16 +330,17 @@ public class JNotepadPP extends JFrame {
 								Paths.get(chooser.getSelectedFile().getPath()));
 					}
 				} else {
-					docModel.saveDocument(docModel.getCurrentDocument(),
-							docModel.getCurrentDocument().getFilePath());
+					docModel.saveDocument(docModel.getCurrentDocument(), docModel.getCurrentDocument().getFilePath());
 				}
 			}
 		}
-		
+
 	};
-	
+
 	private Action saveAsDocumentAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (docModel.getCurrentDocument() != null) {
@@ -383,22 +353,26 @@ public class JNotepadPP extends JFrame {
 				}
 			}
 		}
-		
+
 	};
-	
+
 	private Action closeDocumentAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (docModel.getCurrentDocument() != null) {
 				docModel.closeDocument(docModel.getCurrentDocument());
 			}
 		}
-		
+
 	};
-	
+
 	private Action infoDocumentAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (docModel.getCurrentDocument() != null) {
@@ -418,79 +392,58 @@ public class JNotepadPP extends JFrame {
 				}
 				x += z - 1;
 
-				JOptionPane
-						.showMessageDialog(
-								getParent(), "Your document has " + x + " characters, " + y
-										+ " non-blank characters and " + z + " lines.",
-								"Statistical info", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(getParent(),
+						"Your document has " + x + " characters, " + y + " non-blank characters and " + z + " lines.",
+						"Statistical info", JOptionPane.INFORMATION_MESSAGE);
 
 			}
 		}
-		
+
 	};
-	
+
 	private Action exitDocumentAction = new AbstractAction() {
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			int result = JOptionPane.DEFAULT_OPTION;
-			if (docModel.getNumberOfDocuments() != 0) {
-				for (SingleDocumentModel sdm : docModel.getDocuments()) {
-					if (sdm.isModified()) {
-						result = JOptionPane.showOptionDialog(getParent(),
-								"There are unsaved documents! Are you sure you want to exit the program?",
-								"Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
-								null, JOptionPane.NO_OPTION);
-						break;
-					}
-				}
-			}
 
-			switch (result) {
-			case JOptionPane.DEFAULT_OPTION:
-				t.cancel();
-				dispose();
-				break;
-			case JOptionPane.YES_OPTION:
-				t.cancel();
-				dispose();
-				break;
-			case JOptionPane.NO_OPTION:
-				break;
-			case JOptionPane.CANCEL_OPTION:
-				break;
-			}
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			exitNotepad();
 		}
-		
+
 	};
-	
+
 	private Action cutAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			StringSelection selected = new StringSelection(
 					docModel.getCurrentDocument().getTextComponent().getSelectedText());
 			clpbrd.setContents(selected, null);
-			docModel.getCurrentDocument().getTextComponent()
-					.setText(docModel.getCurrentDocument().getTextComponent().getText()
-							.replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), ""));
+			docModel.getCurrentDocument().getTextComponent().setText(docModel.getCurrentDocument().getTextComponent()
+					.getText().replace(docModel.getCurrentDocument().getTextComponent().getSelectedText(), ""));
 		}
-		
+
 	};
-	
+
 	private Action copyAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			StringSelection selected = new StringSelection(
 					docModel.getCurrentDocument().getTextComponent().getSelectedText());
 			clpbrd.setContents(selected, null);
 		}
-		
+
 	};
-	
+
 	private Action pasteAction = new AbstractAction() {
-		
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Transferable t = clpbrd.getContents(this);
@@ -504,62 +457,61 @@ public class JNotepadPP extends JFrame {
 				}
 			}
 		}
-		
+
 	};
-	
-	
+
 	private void createActions() {
 		newDocumentAction.putValue(Action.NAME, "New");
 		newDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control N"));
 		newDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 		newDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Creates new document.");
-		
+
 		openDocumentAction.putValue(Action.NAME, "Open");
 		openDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control O"));
 		openDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
 		openDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Opens existing document.");
-		
+
 		saveDocumentAction.putValue(Action.NAME, "Save");
 		saveDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
 		saveDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
 		saveDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Saves document.");
-		
+
 		saveAsDocumentAction.putValue(Action.NAME, "Save As");
 		saveAsDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control A"));
 		saveAsDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 		saveAsDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Saves as another document.");
-		
+
 		closeDocumentAction.putValue(Action.NAME, "Close");
 		closeDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control L"));
 		closeDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
 		closeDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Closes current document.");
-		
+
 		infoDocumentAction.putValue(Action.NAME, "Info");
 		infoDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control I"));
 		infoDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
 		infoDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Statistical information of current document.");
-		
+
 		exitDocumentAction.putValue(Action.NAME, "Exit");
 		exitDocumentAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control E"));
 		exitDocumentAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
 		exitDocumentAction.putValue(Action.SHORT_DESCRIPTION, "Exit program.");
-		
+
 		cutAction.putValue(Action.NAME, "Cut");
 		cutAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
 		cutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
 		cutAction.putValue(Action.SHORT_DESCRIPTION, "Cut operation.");
-		
+
 		copyAction.putValue(Action.NAME, "Copy");
 		copyAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
 		copyAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
 		copyAction.putValue(Action.SHORT_DESCRIPTION, "Copy operation.");
-		
+
 		pasteAction.putValue(Action.NAME, "Paste");
 		pasteAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
 		pasteAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_V);
 		pasteAction.putValue(Action.SHORT_DESCRIPTION, "Paste operation.");
 	}
-	
+
 	private void addFileMenuItems(JMenu menu) {
 		menu.add(new JMenuItem(newDocumentAction));
 		menu.add(new JMenuItem(openDocumentAction));
@@ -569,11 +521,41 @@ public class JNotepadPP extends JFrame {
 		menu.addSeparator();
 		menu.add(new JMenuItem(exitDocumentAction));
 	}
-	
+
 	private void addToolBarItems(JToolBar tool) {
 		tool.add(new JButton(cutAction));
 		tool.add(new JButton(copyAction));
 		tool.add(new JButton(pasteAction));
+	}
+
+	private void exitNotepad() {
+		int result = JOptionPane.DEFAULT_OPTION;
+		if (docModel.getNumberOfDocuments() != 0) {
+			for (SingleDocumentModel sdm : docModel.getDocuments()) {
+				if (sdm.isModified()) {
+					result = JOptionPane.showOptionDialog(getParent(),
+							"There are unsaved documents! Are you sure you want to exit the program?", "Warning",
+							JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null,
+							JOptionPane.NO_OPTION);
+					break;
+				}
+			}
+		}
+
+		switch (result) {
+		case JOptionPane.DEFAULT_OPTION:
+			t.cancel();
+			dispose();
+			break;
+		case JOptionPane.YES_OPTION:
+			t.cancel();
+			dispose();
+			break;
+		case JOptionPane.NO_OPTION:
+			break;
+		case JOptionPane.CANCEL_OPTION:
+			break;
+		}
 	}
 
 }
