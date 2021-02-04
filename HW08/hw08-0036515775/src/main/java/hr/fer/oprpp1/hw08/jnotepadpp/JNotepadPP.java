@@ -44,7 +44,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Caret;
 
 public class JNotepadPP extends JFrame {
 
@@ -164,25 +163,29 @@ public class JNotepadPP extends JFrame {
 
 		docModel = new DefaultMultipleDocumentModel();
 
-//		l = new DocumentListener() {
-//
-//			@Override
-//			public void removeUpdate(DocumentEvent e) {
-//
-//			}
-//
-//			@Override
-//			public void insertUpdate(DocumentEvent e) {
-//
-//			}
-//
-//			@Override
-//			public void changedUpdate(DocumentEvent e) {
-//
-//			}
-//		};
-		
-		// ------------------------------ sto dalje? kako dobiti poziciju careta? 
+		l = new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				label1.setText(" length: " + 
+						docModel.getCurrentDocument().getTextComponent().getText().length()
+				);
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				label1.setText(" length: " + 
+						docModel.getCurrentDocument().getTextComponent().getText().length()
+				);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				label1.setText(" length: " + 
+						docModel.getCurrentDocument().getTextComponent().getText().length()
+				);
+			}
+		};
 
 		listener = new ChangeListener() {
 
@@ -199,8 +202,6 @@ public class JNotepadPP extends JFrame {
 				} else {
 					setTitle("JNotepad++");
 				}
-				
-				// --------- novo, s caretom
 
 				docModel.getCurrentDocument().getTextComponent().getDocument().addDocumentListener(l);
 				docModel.getCurrentDocument().getTextComponent().addCaretListener(new CaretListener() {
@@ -216,8 +217,9 @@ public class JNotepadPP extends JFrame {
 						try {
 							int caretpos = docModel.getCurrentDocument().getTextComponent().getCaretPosition();
 							ln = docModel.getCurrentDocument().getTextComponent().getLineOfOffset(caretpos);
-							col = docModel.getCurrentDocument().getTextComponent().getLineStartOffset(ln);
+							col = caretpos - docModel.getCurrentDocument().getTextComponent().getLineStartOffset(ln);
 							ln += 1;
+							col += 1;
 
 						} catch (Exception ex) {
 							ex.printStackTrace();
@@ -227,8 +229,6 @@ public class JNotepadPP extends JFrame {
 					}
 
 				});
-				
-				// ----------
 			}
 
 		};
@@ -300,8 +300,6 @@ public class JNotepadPP extends JFrame {
 		panel1.add((JTabbedPane) docModel, BorderLayout.CENTER);
 
 		cp.add(panel1, BorderLayout.CENTER);
-
-		// nekada ovdje islo panel2 i to ----------
 
 	}
 
