@@ -95,11 +95,16 @@ public class JNotepadPP extends JFrame {
 		docModel.addMultipleDocumentListener(mdl);
 
 		JMenuBar bar = new JMenuBar();
-		JMenu menu = new JMenu();
-		menu.setText("File");
-		addFileMenuItems(menu);
-		menu.setMnemonic(KeyEvent.VK_F);
-		bar.add(menu);
+		
+		JMenu fileMenu = new JMenu("File");
+		addFileMenuItems(fileMenu);
+		
+		JMenu editMenu = new JMenu("Edit");
+		addEditMenuItems(editMenu);
+		
+		bar.add(fileMenu);
+		bar.add(editMenu);
+		
 		this.setJMenuBar(bar);
 
 		JPanel panel1 = new JPanel();
@@ -521,8 +526,17 @@ public class JNotepadPP extends JFrame {
 		menu.addSeparator();
 		menu.add(new JMenuItem(exitDocumentAction));
 	}
+	
+	private void addEditMenuItems(JMenu menu) {
+		menu.add(new JMenuItem(cutAction));
+		menu.add(new JMenuItem(copyAction));
+		menu.add(new JMenuItem(pasteAction));
+	}
 
 	private void addToolBarItems(JToolBar tool) {
+		tool.add(new JButton(openDocumentAction));
+		tool.add(new JButton(saveDocumentAction));
+		tool.addSeparator();
 		tool.add(new JButton(cutAction));
 		tool.add(new JButton(copyAction));
 		tool.add(new JButton(pasteAction));
