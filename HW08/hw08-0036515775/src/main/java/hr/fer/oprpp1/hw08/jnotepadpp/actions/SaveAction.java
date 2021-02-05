@@ -6,9 +6,9 @@ import java.nio.file.Paths;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
-import hr.fer.oprpp1.hw08.jnotepadpp.DefaultMultipleDocumentModel;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LocalizableAction;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
 
 public class SaveAction extends LocalizableAction {
 

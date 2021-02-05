@@ -5,10 +5,11 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import hr.fer.oprpp1.hw08.jnotepadpp.DefaultMultipleDocumentModel;
+import hr.fer.oprpp1.hw08.jnotepadpp.actions.JNotepadPPActions;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenu;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenuItem;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
 
 public class ToolsMenu extends LJMenu {
 

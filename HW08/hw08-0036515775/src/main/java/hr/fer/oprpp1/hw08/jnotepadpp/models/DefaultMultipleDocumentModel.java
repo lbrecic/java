@@ -1,4 +1,4 @@
-package hr.fer.oprpp1.hw08.jnotepadpp;
+package hr.fer.oprpp1.hw08.jnotepadpp.models;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

@@ -1,5 +1,6 @@
 package hr.fer.oprpp1.hw08.jnotepadpp.gui;
 
+import hr.fer.oprpp1.hw08.jnotepadpp.actions.JNotepadPPActions;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenu;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenuItem;

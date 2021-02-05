@@ -4,9 +4,9 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 
-import hr.fer.oprpp1.hw08.jnotepadpp.DefaultMultipleDocumentModel;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LocalizableAction;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
 
 public class CutAction extends LocalizableAction {
 

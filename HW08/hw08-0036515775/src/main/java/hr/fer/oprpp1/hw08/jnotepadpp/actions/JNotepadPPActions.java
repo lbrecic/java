@@ -1,4 +1,4 @@
-package hr.fer.oprpp1.hw08.jnotepadpp.gui;
+package hr.fer.oprpp1.hw08.jnotepadpp.actions;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.KeyEvent;
@@ -8,24 +8,8 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
-import hr.fer.oprpp1.hw08.jnotepadpp.DefaultMultipleDocumentModel;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.AscendingAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.CloseAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.CopyAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.CutAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.DescendingAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.ExitAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.InfoAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.InvertAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.LowerAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.NewAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.OpenAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.PasteAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.SaveAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.SaveAsAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.UniqueAction;
-import hr.fer.oprpp1.hw08.jnotepadpp.actions.UpperAction;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
 
 public class JNotepadPPActions {
 

@@ -2,6 +2,7 @@ package hr.fer.oprpp1.hw08.jnotepadpp.gui;
 
 import javax.swing.JToolBar;
 
+import hr.fer.oprpp1.hw08.jnotepadpp.actions.JNotepadPPActions;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LJButton;
 

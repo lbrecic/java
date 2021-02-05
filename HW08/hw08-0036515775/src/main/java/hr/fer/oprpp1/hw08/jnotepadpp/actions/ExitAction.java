@@ -6,10 +6,10 @@ import java.util.Timer;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import hr.fer.oprpp1.hw08.jnotepadpp.DefaultMultipleDocumentModel;
-import hr.fer.oprpp1.hw08.jnotepadpp.SingleDocumentModel;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.ILocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LocalizableAction;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.SingleDocumentModel;
 
 public class ExitAction extends LocalizableAction {
 

@@ -22,15 +22,18 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import hr.fer.oprpp1.hw08.jnotepadpp.actions.JNotepadPPActions;
 import hr.fer.oprpp1.hw08.jnotepadpp.gui.DockableToolBar;
 import hr.fer.oprpp1.hw08.jnotepadpp.gui.EditMenu;
 import hr.fer.oprpp1.hw08.jnotepadpp.gui.FileMenu;
-import hr.fer.oprpp1.hw08.jnotepadpp.gui.JNotepadPPActions;
 import hr.fer.oprpp1.hw08.jnotepadpp.gui.StatusPanel;
 import hr.fer.oprpp1.hw08.jnotepadpp.gui.ToolsMenu;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.FormLocalizationProvider;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LJMenu;
 import hr.fer.oprpp1.hw08.jnotepadpp.local.LocalizationProvider;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.MultipleDocumentListener;
+import hr.fer.oprpp1.hw08.jnotepadpp.models.SingleDocumentModel;
 
 public class JNotepadPP extends JFrame {
 
