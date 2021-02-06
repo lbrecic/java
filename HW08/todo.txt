@@ -2,4 +2,9 @@ close document ne valja najbolje
 
 spremanje na istoj lokaciji pod istim imenom - izbacuje li warning?
 
+length Ln Col Sel panel se ne izmjenjuje odmah prilikom klika
+
+ascending, descending rade iskljucivo za oznaceni dio teksta,
+trebaju raditi za onu liniju u koje je pola oznaceno (?)
+
 
