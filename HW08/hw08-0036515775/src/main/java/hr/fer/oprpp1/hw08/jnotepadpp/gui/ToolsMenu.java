@@ -18,10 +18,10 @@ public class ToolsMenu extends LJMenu {
 	public ToolsMenu(JNotepadPPActions actions, DefaultMultipleDocumentModel docModel, String key,
 			ILocalizationProvider flp) {
 		super(key, flp);
-		addToolsMenuItems(actions, docModel, flp);
+		initGUI(actions, docModel, flp);
 	}
 
-	public void addToolsMenuItems(JNotepadPPActions actions, DefaultMultipleDocumentModel docModel,
+	public void initGUI(JNotepadPPActions actions, DefaultMultipleDocumentModel docModel,
 			ILocalizationProvider flp) {
 		LJMenu change = new LJMenu("case", flp);
 		change.add(new LJMenuItem(actions.getToUppercaseAction(), "up", flp));

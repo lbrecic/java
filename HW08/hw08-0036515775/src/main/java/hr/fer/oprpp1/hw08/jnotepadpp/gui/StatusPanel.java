@@ -26,33 +26,37 @@ import hr.fer.oprpp1.hw08.jnotepadpp.models.DefaultMultipleDocumentModel;
 public class StatusPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private DefaultMultipleDocumentModel docModel;
 	private ILocalizationProvider flp;
 	private Timer t;
 	private DocumentListener l;
 	private ChangeListener listener;
+	
+	private LJLabel line;
+	private LJLabel column;
+	private LJLabel select;
 
 	public StatusPanel(DefaultMultipleDocumentModel docModel, ILocalizationProvider flp, Timer t) {
 		super();
-		
+
 		this.docModel = docModel;
 		this.flp = flp;
 		this.t = t;
-		
+
 		setLayout(new GridLayout());
 		setBorder(BorderFactory.createLineBorder(Color.black));
-		
+
 		initGUI();
-		
+
 		docModel.addChangeListener(listener);
 	}
-	
+
 	private void initGUI() {
 		LJLabel label1 = new LJLabel("length", flp);
 		label1.setHorizontalTextPosition(SwingConstants.LEFT);
 		add(label1, BorderLayout.WEST);
-		
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout());
 		panel.setAlignmentX(LEFT_ALIGNMENT);
@@ -80,28 +84,31 @@ public class StatusPanel extends JPanel {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				label1.setText(flp.getString("length" )+ " " + docModel.getCurrentDocument().getTextComponent().getText().length());
+				label1.setText(flp.getString("length") + " "
+						+ docModel.getCurrentDocument().getTextComponent().getText().length());
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				label1.setText(flp.getString("length" )+ " " + docModel.getCurrentDocument().getTextComponent().getText().length());
+				label1.setText(flp.getString("length") + " "
+						+ docModel.getCurrentDocument().getTextComponent().getText().length());
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				label1.setText(flp.getString("length" )+ " " + docModel.getCurrentDocument().getTextComponent().getText().length());
+				label1.setText(flp.getString("length") + " "
+						+ docModel.getCurrentDocument().getTextComponent().getText().length());
 			}
 		};
 
 	}
-	
+
 	private void addCaretPanel(JPanel panel) {
-		
-		LJLabel line = new LJLabel("line", flp);
-		LJLabel column = new LJLabel("col", flp);
-		LJLabel select = new LJLabel("sel", flp);
-		
+
+		line = new LJLabel("line", flp);
+		column = new LJLabel("col", flp);
+		select = new LJLabel("sel", flp);
+
 		panel.add(line, BorderLayout.WEST);
 		panel.add(column, BorderLayout.CENTER);
 		panel.add(select, BorderLayout.EAST);
@@ -113,42 +120,49 @@ public class StatusPanel extends JPanel {
 				if (docModel.getSelectedIndex() >= 0) {
 					docModel.setCurrent(docModel.getDocument(docModel.getSelectedIndex()));
 					
-				docModel.getCurrentDocument().getTextComponent().getDocument().addDocumentListener(l);
-				docModel.getCurrentDocument().getTextComponent().addCaretListener(new CaretListener() {
+					updatePanel();
 
-					@Override
-					public void caretUpdate(CaretEvent e) {
-						int sel = 0;
-						if (docModel.getCurrentDocument().getTextComponent().getSelectedText() != null) {
-							sel = docModel.getCurrentDocument().getTextComponent().getSelectedText().length();
-						} 
+					docModel.getCurrentDocument().getTextComponent().getDocument().addDocumentListener(l);
+					docModel.getCurrentDocument().getTextComponent().addCaretListener(new CaretListener() {
 
-						int ln = 1, col = 1;
-						try {
-							int caretpos = docModel.getCurrentDocument().getTextComponent().getCaretPosition();
-							ln = docModel.getCurrentDocument().getTextComponent().getLineOfOffset(caretpos);
-							col = caretpos - docModel.getCurrentDocument().getTextComponent().getLineStartOffset(ln);
-							ln += 1;
-							col += 1;
-
-						} catch (Exception ex) {
-							ex.printStackTrace();
+						@Override
+						public void caretUpdate(CaretEvent e) {
+							updatePanel();
 						}
 
-						line.setText(flp.getString("line") + ": " + ln); 
-						column.setText(flp.getString("col") + ": " + col);
-						select.setText(flp.getString("sel") + ": " + sel);
-					}
+					});
 
-				});
-				
 				} else {
-					line.setText(flp.getString("line") + ": "); 
+					line.setText(flp.getString("line") + ": ");
 					column.setText(flp.getString("col") + ": ");
 					select.setText(flp.getString("sel") + ": ");
 				}
 			}
 		};
+	}
+	
+	private void updatePanel() {
+		int sel = 0;
+		if (docModel.getCurrentDocument().getTextComponent().getSelectedText() != null) {
+			sel = docModel.getCurrentDocument().getTextComponent().getSelectedText().length();
+		}
+
+		int ln = 1, col = 1;
+		try {
+			int caretpos = docModel.getCurrentDocument().getTextComponent().getCaretPosition();
+			ln = docModel.getCurrentDocument().getTextComponent().getLineOfOffset(caretpos);
+			col = caretpos
+					- docModel.getCurrentDocument().getTextComponent().getLineStartOffset(ln);
+			ln += 1;
+			col += 1;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		line.setText(flp.getString("line") + ": " + ln);
+		column.setText(flp.getString("col") + ": " + col);
+		select.setText(flp.getString("sel") + ": " + sel);
 	}
 
 }

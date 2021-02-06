@@ -11,10 +11,10 @@ public class FileMenu extends LJMenu {
 	
 	public FileMenu(JNotepadPPActions actions, String key, ILocalizationProvider flp) {
 		super(key, flp);
-		addFileMenuItems(actions, flp);
+		initGUI(actions, flp);
 	}
 	
-	public void addFileMenuItems(JNotepadPPActions actions, ILocalizationProvider flp) {
+	public void initGUI(JNotepadPPActions actions, ILocalizationProvider flp) {
 		add(new LJMenuItem(actions.getNewDocumentAction(), "new", flp));
 		add(new LJMenuItem(actions.getOpenDocumentAction(), "open", flp));
 		add(new LJMenuItem(actions.getSaveDocumentAction(), "save", flp));

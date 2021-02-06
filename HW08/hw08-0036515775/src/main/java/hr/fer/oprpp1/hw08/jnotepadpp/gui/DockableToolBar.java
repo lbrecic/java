@@ -14,10 +14,10 @@ public class DockableToolBar extends JToolBar {
 
 	public DockableToolBar(JNotepadPPActions actions, ILocalizationProvider flp) {
 		super();
-		addToolBarItems(actions, flp);
+		initGUI(actions, flp);
 	}
 	
-	public void addToolBarItems(JNotepadPPActions actions, ILocalizationProvider flp) {
+	public void initGUI(JNotepadPPActions actions, ILocalizationProvider flp) {
 		add(new LJButton(actions.getOpenDocumentAction(), "open", flp));
 		add(new LJButton(actions.getSaveDocumentAction(), "save", flp));
 		addSeparator();

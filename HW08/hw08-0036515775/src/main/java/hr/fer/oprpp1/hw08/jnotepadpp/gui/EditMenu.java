@@ -11,10 +11,10 @@ public class EditMenu extends LJMenu {
 	
 	public EditMenu(JNotepadPPActions actions, String key, ILocalizationProvider flp) {
 		super(key, flp);
-		addEditMenuItems(actions, flp);
+		initGUI(actions, flp);
 	}
 	
-	public void addEditMenuItems(JNotepadPPActions actions, ILocalizationProvider flp) {
+	public void initGUI(JNotepadPPActions actions, ILocalizationProvider flp) {
 		add(new LJMenuItem(actions.getCutAction(), "cut", flp));
 		add(new LJMenuItem(actions.getCopyAction(), "copy", flp));
 		add(new LJMenuItem(actions.getPasteAction(), "paste", flp));

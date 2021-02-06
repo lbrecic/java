@@ -16,11 +16,11 @@ private static final long serialVersionUID = 1L;
 	
 	public LanguagesMenu(JNotepadPPActions actions, String key, ILocalizationProvider flp) {
 		super(key, flp);
-		addLanguagesMenuItems(actions, flp);
+		initGUI(actions, flp);
 	}
 	
 
-	private void addLanguagesMenuItems(JNotepadPPActions actions, ILocalizationProvider flp) {
+	private void initGUI(JNotepadPPActions actions, ILocalizationProvider flp) {
 		JMenuItem hr = new JMenuItem("hr");
 		hr.addActionListener(new ActionListener() {
 			
