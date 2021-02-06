@@ -1,5 +1,3 @@
-spremanje na istoj lokaciji pod istim imenom - izbacuje li warning?
-
 length Ln Col Sel panel se ne izmjenjuje odmah prilikom klika
 
 ascending, descending, unique rade iskljucivo za oznaceni dio teksta,
