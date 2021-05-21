@@ -1,3 +1,0 @@
-ascending, descending, unique rade iskljucivo za oznaceni dio teksta,
-trebaju raditi za onu liniju u koje je pola oznaceno (?)
-
